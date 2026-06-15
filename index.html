@@ -122,6 +122,45 @@
             opacity: 0.9;
         }
 
+        .hero-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            background-color: #e25e00;
+            color: #ffffff;
+            padding: 12px 30px;
+            border-radius: 40px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: inline-block;
+        }
+
+        .btn-primary:hover {
+            background-color: #2f5f4a;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: #ffffff;
+            padding: 12px 30px;
+            border-radius: 40px;
+            text-decoration: none;
+            font-weight: 600;
+            border: 2px solid #ffffff;
+            transition: all 0.3s;
+        }
+
+        .btn-secondary:hover {
+            background-color: #ffffff;
+            color: #182a47;
+        }
+
         .cursos {
             padding: 80px 0;
             background-color: #ffffff;
@@ -209,7 +248,6 @@
             color: #ffffff;
         }
 
-        /* Sección de precios detallada */
         .precios {
             padding: 80px 0;
             background-color: #f8f9fa;
@@ -254,11 +292,6 @@
             font-weight: 700;
             color: #e25e00;
             margin: 15px 0;
-        }
-
-        .precio small {
-            font-size: 0.8rem;
-            color: #666;
         }
 
         .precio-card ul {
@@ -417,6 +450,7 @@
                     <li><a href="#precios">Precios</a></li>
                     <li><a href="#asesorias">Asesorías</a></li>
                     <li><a href="#contacto">Contacto</a></li>
+                    <li><a href="login.html" class="btn-nav">🔐 Mi curso</a></li>
                     <li><a href="#" class="btn-nav">Inscribirse</a></li>
                 </ul>
             </nav>
@@ -427,6 +461,11 @@
         <div class="container">
             <h1>Preparación para <span class="highlight">exámenes de admisión</span> y asesorías personalizadas</h1>
             <p>En KUNA Academia te ayudamos a alcanzar tus metas educativas con cursos especializados y acompañamiento individualizado.</p>
+            <div class="hero-buttons">
+                <a href="#temario-completo" class="btn-primary">Ver temario completo</a>
+                <a href="login.html" class="btn-secondary">🔐 Acceder a mi curso</a>
+                <a href="#" class="btn-secondary">Consultar precio</a>
+            </div>
         </div>
     </section>
 
@@ -473,8 +512,6 @@
             <h2>💰 Detalle de inversión</h2>
             <p class="subtitulo">Precios accesibles y opciones de pago único</p>
             <div class="precios-grid">
-                
-                <!-- Curso EXCOBA -->
                 <div class="precio-card">
                     <h3>📘 Curso EXCOBA</h3>
                     <div class="precio">$2,500 MXN</div>
@@ -497,7 +534,6 @@
                     <a href="excoba.html" class="btn-curso">Ver curso completo →</a>
                 </div>
 
-                <!-- Curso Secundaria -->
                 <div class="precio-card">
                     <h3>📖 Secundaria en un examen</h3>
                     <div class="precio">$2,000 MXN</div>
@@ -514,7 +550,6 @@
                     <a href="secundaria.html" class="btn-curso">Ver curso completo →</a>
                 </div>
 
-                <!-- Asesorías -->
                 <div class="precio-card">
                     <h3>📐 Asesorías por tema</h3>
                     <div class="precio">$350 MXN</div>
@@ -564,6 +599,10 @@
         <div class="container">
             <h2>📲 ¿Listo para empezar?</h2>
             <p>Escúbenos por WhatsApp y recibe información sobre precios, horarios y promociones.</p>
+            <a href="login.html" class="btn-primary" style="background-color: #2f5f4a; margin-bottom: 20px; display: inline-block;">
+                🔐 Alumnos: Acceder a mi curso
+            </a>
+            <br>
             <a href="https://wa.me/527712099224?text=Hola%2C%20quiero%20informaci%C3%B3n%20sobre%20los%20cursos%20de%20KUNA%20Academia" class="btn-whatsapp">
                 💬 Contactar por WhatsApp
             </a>
