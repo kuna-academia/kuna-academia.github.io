@@ -248,6 +248,55 @@
             color: #ffffff;
         }
 
+        /* Sección de temario completo */
+        .temario-completo {
+            padding: 80px 0;
+            background-color: #ffffff;
+        }
+
+        .temario-completo h2 {
+            text-align: center;
+            font-size: 2.2rem;
+            color: #182a47;
+            margin-bottom: 15px;
+        }
+
+        .temario-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .temario-card {
+            background: #f8f9fa;
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            transition: transform 0.3s;
+            border-left: 5px solid #e25e00;
+        }
+
+        .temario-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .temario-card h3 {
+            color: #182a47;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+
+        .temario-card p {
+            color: #555;
+            margin-bottom: 10px;
+        }
+
+        .temario-card small {
+            color: #666;
+            font-size: 0.85rem;
+        }
+
         .precios {
             padding: 80px 0;
             background-color: #f8f9fa;
@@ -425,7 +474,7 @@
                 font-size: 2rem;
             }
             
-            .cursos-grid, .precios-grid, .temas-grid {
+            .cursos-grid, .temario-grid, .precios-grid, .temas-grid {
                 grid-template-columns: 1fr;
             }
         }
@@ -447,6 +496,7 @@
                 <ul>
                     <li><a href="#inicio">Inicio</a></li>
                     <li><a href="#cursos">Cursos</a></li>
+                    <li><a href="#temario-completo">Temario</a></li>
                     <li><a href="#precios">Precios</a></li>
                     <li><a href="#asesorias">Asesorías</a></li>
                     <li><a href="#contacto">Contacto</a></li>
@@ -464,7 +514,7 @@
             <div class="hero-buttons">
                 <a href="#temario-completo" class="btn-primary">Ver temario completo</a>
                 <a href="login.html" class="btn-secondary">🔐 Acceder a mi curso</a>
-                <a href="#" class="btn-secondary">Consultar precio</a>
+                <a href="#precios" class="btn-secondary">Consultar precio</a>
             </div>
         </div>
     </section>
@@ -503,6 +553,37 @@
                     <p>Acredita tu preparatoria con un solo examen. Preparamos en todas las materias.</p>
                     <a href="#" class="btn-curso btn-secundario">Próximamente →</a>
                 </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección: Temario completo -->
+    <section id="temario-completo" class="temario-completo">
+        <div class="container">
+            <h2>📖 Temario completo EXCOBA</h2>
+            <p class="subtitulo">12 semanas divididas en 4 bloques</p>
+            <div class="temario-grid">
+                <div class="temario-card">
+                    <h3>📐 Bloque 1</h3>
+                    <p><strong>Semanas 1-4</strong></p>
+                    <p>Aritmética, Álgebra, Ecuaciones, Geometría</p>
+                    <small>Jerarquía de operaciones, exponentes, conversión de unidades, polinomios, factorización, ecuaciones lineales, sistemas, áreas, perímetros, Teorema de Pitágoras</small>
+                </div>
+                <div class="temario-card">
+                    <h3>📏 Bloque 2</h3>
+                    <p><strong>Semanas 5-8</strong></p>
+                    <p>Trigonometría, Probabilidad, Vectores, Cinemática</p>
+                    <small>Razones trigonométricas, funciones, estadística básica, suma de vectores, MRU, MRUA, caída libre</small>
+                </div>
+                <div class="temario-card">
+                    <h3>⚡ Bloque 3</h3>
+                    <p><strong>Semanas 9-12</strong></p>
+                    <p>Dinámica, Energía, Fluidos, Electricidad, Ondas</p>
+                    <small>Leyes de Newton, trabajo, energía cinética y potencial, presión hidrostática, Ley de Ohm, reflexión y refracción</small>
+                </div>
+            </div>
+            <div class="centrar" style="text-align: center; margin-top: 30px;">
+                <a href="excoba.html" class="btn-primary">Ver temario detallado por semana →</a>
             </div>
         </div>
     </section>
