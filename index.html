@@ -3,29 +3,333 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Curso EXCOBA | Física y Matemáticas</title>
+    <title>KUNA Academia | Preparación para exámenes y asesorías</title>
     
-    <!-- Enlaces a Google Fonts para las tipografías -->
+    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     
-    <!-- Enlace a nuestro archivo de estilos CSS -->
-    <link rel="stylesheet" href="estilo.css">
+    <style>
+        /* ============================================
+           ESTILOS PRINCIPALES - KUNA ACADEMIA
+           Colores: #182a47, #e25e00, #2f5f4a, #ffffff
+           ============================================ */
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #ffffff;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* ----- ENCABEZADO ----- */
+        header {
+            background-color: #182a47;
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo img {
+            height: 50px;
+            width: auto;
+        }
+
+        .logo h1 {
+            font-size: 1.5rem;
+            color: #ffffff;
+        }
+
+        .logo h1 span {
+            font-weight: 300;
+            font-size: 1.2rem;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 25px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        nav ul li a {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        nav ul li a:hover {
+            color: #e25e00;
+        }
+
+        .btn-nav {
+            background-color: #e25e00;
+            padding: 8px 20px;
+            border-radius: 30px;
+            color: #ffffff !important;
+        }
+
+        .btn-nav:hover {
+            background-color: #2f5f4a;
+        }
+
+        /* ----- SECCIÓN HERO ----- */
+        .hero {
+            background: linear-gradient(135deg, #182a47 0%, #1e3c72 100%);
+            color: #ffffff;
+            padding: 80px 0;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+
+        .hero .highlight {
+            color: #e25e00;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 30px;
+            opacity: 0.9;
+        }
+
+        /* ----- SECCIÓN CURSOS ----- */
+        .cursos {
+            padding: 80px 0;
+            background-color: #ffffff;
+        }
+
+        .cursos h2 {
+            text-align: center;
+            font-size: 2.2rem;
+            color: #182a47;
+            margin-bottom: 15px;
+        }
+
+        .subtitulo {
+            text-align: center;
+            color: #666;
+            margin-bottom: 50px;
+        }
+
+        .cursos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .curso-card {
+            background: #f8f9fa;
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+            border-bottom: 4px solid #e25e00;
+        }
+
+        .curso-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .curso-icono {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+
+        .curso-card h3 {
+            color: #182a47;
+            margin-bottom: 10px;
+        }
+
+        .curso-card p {
+            color: #555;
+            margin-bottom: 20px;
+        }
+
+        .btn-curso {
+            background-color: #e25e00;
+            color: #ffffff;
+            padding: 10px 25px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-block;
+            transition: background 0.3s;
+        }
+
+        .btn-curso:hover {
+            background-color: #2f5f4a;
+        }
+
+        .btn-secundario {
+            background-color: transparent;
+            color: #e25e00;
+            border: 2px solid #e25e00;
+        }
+
+        .btn-secundario:hover {
+            background-color: #e25e00;
+            color: #ffffff;
+        }
+
+        /* ----- SECCIÓN ASESORÍAS ----- */
+        .asesorias {
+            padding: 80px 0;
+            background-color: #f8f9fa;
+        }
+
+        .asesorias h2 {
+            text-align: center;
+            font-size: 2.2rem;
+            color: #182a47;
+            margin-bottom: 15px;
+        }
+
+        .temas-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-top: 40px;
+        }
+
+        .tema-card {
+            background: #ffffff;
+            padding: 25px;
+            border-radius: 16px;
+            text-align: center;
+            border-left: 5px solid #e25e00;
+        }
+
+        .tema-card h3 {
+            color: #182a47;
+            margin-bottom: 10px;
+        }
+
+        .tema-card p {
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        /* ----- SECCIÓN CONTACTO ----- */
+        .contacto {
+            background-color: #182a47;
+            color: #ffffff;
+            padding: 60px 0;
+            text-align: center;
+        }
+
+        .contacto h2 {
+            font-size: 2rem;
+            margin-bottom: 15px;
+        }
+
+        .contacto p {
+            margin-bottom: 25px;
+            opacity: 0.9;
+        }
+
+        .btn-whatsapp {
+            background-color: #25D366;
+            color: #ffffff;
+            padding: 14px 35px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            display: inline-block;
+            transition: all 0.3s;
+        }
+
+        .btn-whatsapp:hover {
+            background-color: #128C7E;
+            transform: scale(1.02);
+        }
+
+        /* ----- PIE DE PÁGINA ----- */
+        footer {
+            background-color: #0f1f33;
+            color: #8899aa;
+            text-align: center;
+            padding: 30px 0;
+            font-size: 0.9rem;
+        }
+
+        /* ----- RESPONSIVE ----- */
+        @media (max-width: 768px) {
+            header .container {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            nav ul {
+                justify-content: center;
+            }
+            
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .cursos-grid, .temas-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+    </style>
 </head>
 <body>
 
-    <!-- Encabezado con menú de navegación -->
+    <!-- Encabezado -->
     <header>
         <div class="container">
             <div class="logo">
-                <img src="logo.png" alt="Logo Curso EXCOBA">
-                <span>EXCOBA Prep</span>
+                <img src="logo.png" alt="KUNA Academia">
+                <h1>KUNA<span>Academia</span></h1>
             </div>
             <nav>
                 <ul>
                     <li><a href="#inicio">Inicio</a></li>
-                    <li><a href="#temario">Temario</a></li>
-                    <li><a href="#temario-completo">Temario completo</a></li>
-                    <li><a href="#metodo">Método</a></li>
+                    <li><a href="#cursos">Cursos</a></li>
+                    <li><a href="#asesorias">Asesorías</a></li>
                     <li><a href="#contacto">Contacto</a></li>
                     <li><a href="#" class="btn-nav">Inscribirse</a></li>
                 </ul>
@@ -33,158 +337,90 @@
         </div>
     </header>
 
-    <!-- Sección principal (Hero) -->
+    <!-- Sección principal -->
     <section id="inicio" class="hero">
         <div class="container">
-            <div class="hero-content">
-                <h1>Domina <span class="highlight">Física y Matemáticas</span> para el EXCOBA</h1>
-                <p>Curso intensivo de 12 semanas con acompañamiento personalizado. Más de 1000 alumnos preparados.</p>
-                <div class="hero-buttons">
-                    <a href="#temario-completo" class="btn-primary">Ver temario completo</a>
-                    <a href="#" class="btn-secondary">Consultar precio</a>
-                </div>
-            </div>
-            <div class="hero-image">
-                <div class="cuadro-destacado">
-                    <p>🎯 90%<br><span>de aprobación</span></p>
-                </div>
-            </div>
+            <h1>Preparación para <span class="highlight">exámenes de admisión</span> y asesorías personalizadas</h1>
+            <p>En KUNA Academia te ayudamos a alcanzar tus metas educativas con cursos especializados y acompañamiento individualizado.</p>
         </div>
     </section>
 
-    <!-- Sección: Cómo funciona el curso -->
-    <section id="metodo" class="metodo">
+    <!-- Sección: Cursos -->
+    <section id="cursos" class="cursos">
         <div class="container">
-            <h2>📚 ¿Cómo funciona el curso?</h2>
-            <div class="cards">
-                <div class="card">
-                    <div class="card-icon">📹</div>
-                    <h3>Lunes y Martes</h3>
-                    <p>Videos explicativos + diapositivas. Estudias a tu ritmo.</p>
+            <h2>📚 Nuestros cursos</h2>
+            <p class="subtitulo">Elige el curso que necesitas y prepárate con nosotros</p>
+            <div class="cursos-grid">
+                
+                <!-- Curso EXCOBA -->
+                <div class="curso-card">
+                    <div class="curso-icono">🔬📐</div>
+                    <h3>Curso EXCOBA</h3>
+                    <p>Preparación completa para el examen de ingreso a ingenierías. Física y matemáticas.</p>
+                    <a href="excoba.html" class="btn-curso">Ver curso →</a>
                 </div>
-                <div class="card">
-                    <div class="card-icon">📝</div>
-                    <h3>Miércoles y Jueves</h3>
-                    <p>Cuestionarios en Google Forms para practicar.</p>
+
+                <!-- Curso CENEVAL -->
+                <div class="curso-card">
+                    <div class="curso-icono">📘✅</div>
+                    <h3>Curso CENEVAL</h3>
+                    <p>Preparación para el examen CENEVAL de ingreso a licenciatura. Todas las áreas.</p>
+                    <a href="#" class="btn-curso btn-secundario">Próximamente →</a>
                 </div>
-                <div class="card">
-                    <div class="card-icon">🎥</div>
-                    <h3>Viernes</h3>
-                    <p>Sesión en vivo para resolver dudas y reforzar.</p>
+
+                <!-- Curso Prepa en un examen -->
+                <div class="curso-card">
+                    <div class="curso-icono">🎓⚡</div>
+                    <h3>Prepa en un examen</h3>
+                    <p>Acredita tu preparatoria con un solo examen. Preparamos en todas las materias.</p>
+                    <a href="#" class="btn-curso btn-secundario">Próximamente →</a>
+                </div>
+
+                <!-- Curso Secundaria -->
+                <div class="curso-card">
+                    <div class="curso-icono">📖✏️</div>
+                    <h3>Secundaria en un examen</h3>
+                    <p>Preparación para acreditar secundaria con un solo examen. Temario completo.</p>
+                    <a href="#" class="btn-curso btn-secundario">Próximamente →</a>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Sección: Temario (vista previa) -->
-    <section id="temario" class="temario">
+    <!-- Sección: Asesorías por tema -->
+    <section id="asesorias" class="asesorias">
         <div class="container">
-            <h2>📖 Temario del curso</h2>
-            <p class="subtitulo">12 semanas divididas en 4 bloques</p>
-            <div class="semanas-grid">
-                <div class="semana">
-                    <h3>Semana 1-2</h3>
-                    <p>Aritmética y Álgebra</p>
-                    <small>Jerarquía, exponentes, conversión de unidades, polinomios, factorización</small>
+            <h2>📖 Asesorías personalizadas</h2>
+            <p class="subtitulo">Clases particulares enfocadas en tus necesidades específicas</p>
+            <div class="temas-grid">
+                <div class="tema-card">
+                    <h3>📐 Álgebra</h3>
+                    <p>Ecuaciones, polinomios, factorización, sistemas y más.</p>
+                    <small>Duración: 1 hora | En línea</small>
                 </div>
-                <div class="semana">
-                    <h3>Semana 3-4</h3>
-                    <p>Ecuaciones y Geometría</p>
-                    <small>Ecuaciones lineales, sistemas, áreas, perímetros, Teorema de Pitágoras</small>
+                <div class="tema-card">
+                    <h3>📏 Geometría</h3>
+                    <p>Áreas, perímetros, teoremas, geometría analítica.</p>
+                    <small>Duración: 1 hora | En línea</small>
                 </div>
-                <div class="semana">
-                    <h3>Semana 5-6</h3>
-                    <p>Trigonometría y Probabilidad</p>
-                    <small>Razones trigonométricas, funciones, estadística básica</small>
-                </div>
-                <div class="semana">
-                    <h3>Semana 7-12</h3>
-                    <p>Física completa</p>
-                    <small>Vectores, cinemática, dinámica, energía, fluidos, electricidad</small>
+                <div class="tema-card">
+                    <h3>📈 Cálculo</h3>
+                    <p>Límites, derivadas, integrales y aplicaciones.</p>
+                    <small>Duración: 1 hora | En línea</small>
                 </div>
             </div>
-            <div class="centrar">
-                <a href="#temario-completo" class="btn-primary">Ver temario completo</a>
+            <div class="centrar" style="text-align: center; margin-top: 30px;">
+                <a href="#contacto" class="btn-curso">Solicitar información</a>
             </div>
         </div>
     </section>
 
-    <!-- ===== SECCIÓN NUEVA: TEMARIO COMPLETO (12 SEMANAS) ===== -->
-    <section id="temario-completo" class="temario" style="background-color: #f8f9fa;">
-        <div class="container">
-            <h2>📚 Temario completo (12 semanas)</h2>
-            <p class="subtitulo">Cada semana incluye videos, cuestionarios y sesión en vivo</p>
-            <div class="semanas-grid">
-                <div class="semana">
-                    <h3>Semana 1</h3>
-                    <p>Aritmética</p>
-                    <small>Jerarquía de operaciones, leyes de exponentes, conversión de unidades, notación científica</small>
-                </div>
-                <div class="semana">
-                    <h3>Semana 2</h3>
-                    <p>Álgebra</p>
-                    <small>Operaciones con polinomios, productos notables, factorización, binomios conjugados</small>
-                </div>
-                <div class="semana">
-                    <h3>Semana 3</h3>
-                    <p>Ecuaciones lineales</p>
-                    <small>Despejes, ecuaciones con variables en ambos lados, ecuaciones con fracciones</small>
-                </div>
-                <div class="semana">
-                    <h3>Semana 4</h3>
-                    <p>Sistemas de ecuaciones</p>
-                    <small>Método de sustitución, método de suma/resta, problemas prácticos</small>
-                </div>
-                <div class="semana">
-                    <h3>Semana 5</h3>
-                    <p>Geometría plana</p>
-                    <small>Perímetros y áreas de figuras planas, Teorema de Pitágoras, aplicaciones</small>
-                </div>
-                <div class="semana">
-                    <h3>Semana 6</h3>
-                    <p>Trigonometría</p>
-                    <small>Razones trigonométricas (seno, coseno, tangente), funciones lineales y cuadráticas</small>
-                </div>
-                <div class="semana">
-                    <h3>Semana 7</h3>
-                    <p>Probabilidad y estadística</p>
-                    <small>Media, mediana, moda, regla de Laplace, probabilidad simple</small>
-                </div>
-                <div class="semana">
-                    <h3>Semana 8</h3>
-                    <p>Vectores y cinemática</p>
-                    <small>Vectores (componentes rectangulares), MRU, MRUA, caída libre</small>
-                </div>
-                <div class="semana">
-                    <h3>Semana 9</h3>
-                    <p>Dinámica</p>
-                    <small>Leyes de Newton (inercia, F=ma, acción-reacción), fuerza de rozamiento</small>
-                </div>
-                <div class="semana">
-                    <h3>Semana 10</h3>
-                    <p>Energía y trabajo</p>
-                    <small>Trabajo mecánico, energía cinética, energía potencial (gravitatoria y elástica)</small>
-                </div>
-                <div class="semana">
-                    <h3>Semana 11</h3>
-                    <p>Fluidos y termodinámica</p>
-                    <small>Presión hidrostática, Principio de Pascal, Arquímedes, ley de gases ideales, calor específico</small>
-                </div>
-                <div class="semana">
-                    <h3>Semana 12</h3>
-                    <p>Electricidad y ondas</p>
-                    <small>Ley de Ohm (V=R·I), circuitos en serie y paralelo, reflexión y refracción de la luz</small>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Sección: Contacto / WhatsApp -->
+    <!-- Sección: Contacto -->
     <section id="contacto" class="contacto">
         <div class="container">
             <h2>📲 ¿Listo para empezar?</h2>
-            <p>Escríbeme por WhatsApp y recibe información sobre precios y fechas.</p>
-            <a href="https://wa.me/521234567890?text=Hola%2C%20quiero%20informaci%C3%B3n%20del%20curso%20EXCOBA" class="btn-whatsapp">
+            <p>Escúbenos por WhatsApp y recibe información sobre precios, horarios y promociones.</p>
+            <a href="https://wa.me/521234567890?text=Hola%2C%20quiero%20informaci%C3%B3n%20sobre%20los%20cursos%20de%20KUNA%20Academia" class="btn-whatsapp">
                 💬 Contactar por WhatsApp
             </a>
         </div>
@@ -193,7 +429,7 @@
     <!-- Pie de página -->
     <footer>
         <div class="container">
-            <p>&copy; 2026 Curso EXCOBA - Preparación para examen de admisión</p>
+            <p>&copy; 2026 KUNA Academia - Preparación para exámenes y asesorías</p>
             <p><small>Todos los derechos reservados</small></p>
         </div>
     </footer>
