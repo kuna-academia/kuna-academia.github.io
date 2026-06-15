@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Iniciar Sesión | KUNA Academia</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #182a47 0%, #1e3c72 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .login-container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 450px;
+            width: 100%;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo img {
+            height: 60px;
+            margin-bottom: 10px;
+        }
+
+        .logo h1 {
+            font-family: 'Montserrat', sans-serif;
+            color: #182a47;
+            font-size: 1.8rem;
+        }
+
+        .logo span {
+            font-weight: 300;
+            font-size: 1.2rem;
+        }
+
+        h2 {
+            text-align: center;
+            color: #182a47;
+            margin-bottom: 25px;
+            font-size: 1.5rem;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #333;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: border 0.3s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #e25e00;
+        }
+
+        button {
+            width: 100%;
+            background-color: #e25e00;
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 40px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: #2f5f4a;
+        }
+
+        .error-message {
+            background-color: #ffebee;
+            color: #d32f2f;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+            display: none;
+        }
+
+        .info {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        .btn-volver {
+            display: block;
+            text-align: center;
+            margin-top: 15px;
+            color: #e25e00;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="logo">
+            <img src="logo.png" alt="KUNA Academia">
+            <h1>KUNA<span>Academia</span></h1>
+        </div>
+        <h2>🔐 Iniciar Sesión</h2>
+        
+        <div id="errorMessage" class="error-message">
+            ❌ Usuario o contraseña incorrectos
+        </div>
+        
+        <div class="input-group">
+            <label>📧 Correo electrónico o usuario</label>
+            <input type="text" id="username" placeholder="Ej: ana@email.com">
+        </div>
+        
+        <div class="input-group">
+            <label>🔑 Contraseña</label>
+            <input type="password" id="password" placeholder="Tu contraseña">
+        </div>
+        
+        <button onclick="iniciarSesion()">Ingresar al curso →</button>
+        
+        <div class="info">
+            <p>⚡ ¿Eres alumno? Recibirás tus datos de acceso por WhatsApp</p>
+            <p>📞 ¿No tienes cuenta? <a href="index.html">Contáctanos</a></p>
+        </div>
+        <a href="index.html" class="btn-volver">← Volver al inicio</a>
+    </div>
+
+    <script>
+        // ============================================
+        // BANCO DE USUARIOS (TÚ AGREGA A TUS ALUMNOS)
+        // ============================================
+        const usuarios = [
+            { username: "ana@email.com", password: "ana123", nombre: "Ana García", curso: "EXCOBA" },
+            { username: "luis@email.com", password: "luis123", nombre: "Luis Martínez", curso: "EXCOBA" },
+            { username: "carla@email.com", password: "carla123", nombre: "Carla López", curso: "Secundaria" }
+            // Agrega aquí más alumnos cuando se inscriban
+        ];
+
+        function iniciarSesion() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const errorDiv = document.getElementById('errorMessage');
+            
+            const usuarioEncontrado = usuarios.find(u => u.username === username && u.password === password);
+            
+            if (usuarioEncontrado) {
+                localStorage.setItem('alumno', JSON.stringify({
+                    nombre: usuarioEncontrado.nombre,
+                    username: usuarioEncontrado.username,
+                    curso: usuarioEncontrado.curso
+                }));
+                window.location.href = 'dashboard.html';
+            } else {
+                errorDiv.style.display = 'block';
+                setTimeout(() => {
+                    errorDiv.style.display = 'none';
+                }, 3000);
+            }
+        }
+        
+        document.getElementById('password').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                iniciarSesion();
+            }
+        });
+    </script>
+</body>
+</html>

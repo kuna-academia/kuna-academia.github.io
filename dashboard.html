@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Mi Curso | KUNA Academia</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        header {
+            background-color: #182a47;
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .logo h1 {
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        .logo span {
+            font-weight: 300;
+        }
+
+        .user-info {
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .btn-cerrar {
+            background-color: #e25e00;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .btn-cerrar:hover {
+            background-color: #2f5f4a;
+        }
+
+        .dashboard {
+            padding: 40px 0;
+        }
+
+        .bienvenida {
+            background: linear-gradient(135deg, #182a47, #1e3c72);
+            color: white;
+            padding: 40px;
+            border-radius: 20px;
+            margin-bottom: 40px;
+        }
+
+        .bienvenida h2 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .progreso-container {
+            background-color: #e0e0e0;
+            border-radius: 20px;
+            height: 20px;
+            margin-top: 20px;
+            overflow: hidden;
+        }
+
+        .progreso-bar {
+            background-color: #e25e00;
+            width: 0%;
+            height: 100%;
+            border-radius: 20px;
+            transition: width 0.3s;
+        }
+
+        .secciones {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .card-material {
+            background: white;
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            border-left: 5px solid #e25e00;
+        }
+
+        .card-material h3 {
+            color: #182a47;
+            margin-bottom: 15px;
+        }
+
+        .recurso {
+            padding: 12px;
+            background-color: #f8f9fa;
+            margin: 10px 0;
+            border-radius: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .recurso a {
+            color: #e25e00;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .recurso a:hover {
+            text-decoration: underline;
+        }
+
+        .completado {
+            color: #2f5f4a;
+            font-weight: bold;
+        }
+
+        input[type="checkbox"] {
+            margin-right: 10px;
+            transform: scale(1.2);
+            cursor: pointer;
+        }
+
+        .simulador-link {
+            display: block;
+            background-color: #e25e00;
+            color: white;
+            text-align: center;
+            padding: 15px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            margin-top: 20px;
+        }
+
+        .simulador-link:hover {
+            background-color: #2f5f4a;
+        }
+
+        footer {
+            background-color: #0f1f33;
+            color: #8899aa;
+            text-align: center;
+            padding: 30px 0;
+            margin-top: 40px;
+        }
+
+        @media (max-width: 768px) {
+            header .container {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+            .secciones {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="container">
+            <div class="logo">
+                <h1>KUNA<span>Academia</span></h1>
+            </div>
+            <div class="user-info" id="userInfo">
+                <span>👤 Cargando...</span>
+                <button class="btn-cerrar" onclick="cerrarSesion()">Cerrar sesión</button>
+            </div>
+        </div>
+    </header>
+
+    <div class="dashboard container">
+        <div id="bienvenida" class="bienvenida">
+            <h2>¡Hola, <span id="nombreAlumno">Alumno</span>! 👋</h2>
+            <p>Bienvenido a tu curso. Aquí encontrarás todo el material y podrás seguir tu progreso.</p>
+            <div class="progreso-container">
+                <div id="progresoBar" class="progreso-bar"></div>
+            </div>
+            <p id="porcentajeProgreso" style="margin-top: 10px;">0% completado</p>
+        </div>
+
+        <div id="contenidoCurso">
+            <!-- El contenido se carga dinámicamente según el curso -->
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 KUNA Academia - Preparación para exámenes</p>
+        </div>
+    </footer>
+
+    <script>
+        // ============================================
+        // CONTENIDO DE LOS CURSOS CON SIMULADORES
+        // ============================================
+        const contenidoPorCurso = {
+            "EXCOBA": {
+                titulo: "Curso EXCOBA - Física y Matemáticas",
+                simuladores: [
+                    { nombre: "Simulador Bloque 1 (Semanas 1-4)", url: "simulador-bloque1.html", icono: "📘" },
+                    { nombre: "Simulador Bloque 2 (Semanas 5-8)", url: "simulador-bloque2.html", icono: "📘" },
+                    { nombre: "Simulador Bloque 3 (Semanas 9-12)", url: "simulador-bloque3.html", icono: "📘" },
+                    { nombre: "🏁 Simulador Final (EXCOBA completo)", url: "simulador-final.html", icono: "🏁" }
+                ],
+                semanas: [
+                    { nombre: "Semana 1: Aritmética", recursos: [] },
+                    { nombre: "Semana 2: Álgebra", recursos: [] },
+                    { nombre: "Semana 3: Ecuaciones", recursos: [] },
+                    { nombre: "Semana 4: Geometría", recursos: [] },
+                    { nombre: "Semana 5: Trigonometría", recursos: [] },
+                    { nombre: "Semana 6: Probabilidad y Estadística", recursos: [] },
+                    { nombre: "Semana 7: Vectores", recursos: [] },
+                    { nombre: "Semana 8: Cinemática", recursos: [] },
+                    { nombre: "Semana 9: Dinámica", recursos: [] },
+                    { nombre: "Semana 10: Energía y Trabajo", recursos: [] },
+                    { nombre: "Semana 11: Fluidos y Termodinámica", recursos: [] },
+                    { nombre: "Semana 12: Electricidad y Ondas", recursos: [] }
+                ]
+            },
+            "Secundaria": {
+                titulo: "Curso Secundaria - Matemáticas",
+                simuladores: [],
+                semanas: [
+                    { nombre: "Semana 1: Números y operaciones", recursos: [] },
+                    { nombre: "Semana 2: Proporcionalidad", recursos: [] },
+                    { nombre: "Semana 3: Álgebra básica", recursos: [] },
+                    { nombre: "Semana 4: Geometría plana", recursos: [] },
+                    { nombre: "Semana 5: Geometría del espacio", recursos: [] },
+                    { nombre: "Semana 6: Estadística", recursos: [] },
+                    { nombre: "Semana 7: Probabilidad", recursos: [] },
+                    { nombre: "Semana 8: Simulacro final", recursos: [] }
+                ]
+            }
+        };
+
+        // ============================================
+        // FUNCIONES PRINCIPALES
+        // ============================================
+        
+        function verificarAcceso() {
+            const alumno = localStorage.getItem('alumno');
+            if (!alumno) {
+                window.location.href = 'login.html';
+                return null;
+            }
+            return JSON.parse(alumno);
+        }
+
+        function cargarDashboard() {
+            const alumno = verificarAcceso();
+            if (!alumno) return;
+
+            document.getElementById('nombreAlumno').textContent = alumno.nombre;
+            document.getElementById('userInfo').innerHTML = `
+                <span>👤 ${alumno.nombre}</span>
+                <button class="btn-cerrar" onclick="cerrarSesion()">Cerrar sesión</button>
+            `;
+
+            const curso = contenidoPorCurso[alumno.curso];
+            if (curso) {
+                let html = `<h2>📚 ${curso.titulo}</h2>`;
+                
+                // Sección de simuladores (si tiene)
+                if (curso.simuladores && curso.simuladores.length > 0) {
+                    html += `<div class="card-material" style="margin-bottom: 30px;">
+                        <h3>🎯 Simuladores de examen</h3>`;
+                    curso.simuladores.forEach(sim => {
+                        html += `
+                            <div class="recurso">
+                                <span>${sim.icono} ${sim.nombre}</span>
+                                <a href="${sim.url}" target="_blank">Comenzar →</a>
+                            </div>
+                        `;
+                    });
+                    html += `</div>`;
+                }
+                
+                // Sección de semanas
+                html += `<div class="secciones">`;
+                curso.semanas.forEach((semana, idx) => {
+                    const completadas = obtenerCompletadas(alumno.username);
+                    const semanaCompletada = completadas[`semana_${idx}`] || false;
+                    
+                    html += `
+                        <div class="card-material">
+                            <h3>${semana.nombre}</h3>
+                            ${semana.recursos.length === 0 ? '<p>📌 Material disponible próximamente</p>' : ''}
+                        </div>
+                    `;
+                });
+                html += `</div>`;
+                document.getElementById('contenidoCurso').innerHTML = html;
+                actualizarProgreso(curso);
+            }
+        }
+
+        function obtenerCompletadas(username) {
+            const key = `progreso_${username}`;
+            const guardado = localStorage.getItem(key);
+            return guardado ? JSON.parse(guardado) : {};
+        }
+
+        function actualizarProgreso(curso) {
+            const alumno = JSON.parse(localStorage.getItem('alumno'));
+            const completadas = obtenerCompletadas(alumno.username);
+            
+            let totalRecursos = 0;
+            let completados = 0;
+            
+            curso.semanas.forEach((semana, idx) => {
+                if (semana.recursos.length > 0) {
+                    totalRecursos += semana.recursos.length;
+                    semana.recursos.forEach((recurso, ridx) => {
+                        if (completadas[`recurso_${idx}_${ridx}`]) completados++;
+                    });
+                }
+            });
+            
+            const porcentaje = totalRecursos > 0 ? Math.round((completados / totalRecursos) * 100) : 0;
+            document.getElementById('progresoBar').style.width = `${porcentaje}%`;
+            document.getElementById('porcentajeProgreso').textContent = `${porcentaje}% completado`;
+        }
+
+        function cerrarSesion() {
+            localStorage.removeItem('alumno');
+            window.location.href = 'login.html';
+        }
+
+        cargarDashboard();
+    </script>
+</body>
+</html>
