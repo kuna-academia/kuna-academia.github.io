@@ -9,11 +9,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     
     <style>
-        /* ============================================
-           ESTILOS PRINCIPALES - KUNA ACADEMIA
-           Colores: #182a47, #e25e00, #2f5f4a, #ffffff
-           ============================================ */
-        
         * {
             margin: 0;
             padding: 0;
@@ -175,6 +170,13 @@
             margin-bottom: 10px;
         }
 
+        .precio-curso {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #e25e00;
+            margin: 15px 0;
+        }
+
         .curso-card p {
             color: #555;
             margin-bottom: 20px;
@@ -189,6 +191,7 @@
             font-weight: 600;
             display: inline-block;
             transition: background 0.3s;
+            margin-top: 10px;
         }
 
         .btn-curso:hover {
@@ -206,9 +209,95 @@
             color: #ffffff;
         }
 
-        .asesorias {
+        /* Sección de precios detallada */
+        .precios {
             padding: 80px 0;
             background-color: #f8f9fa;
+        }
+
+        .precios h2 {
+            text-align: center;
+            font-size: 2.2rem;
+            color: #182a47;
+            margin-bottom: 15px;
+        }
+
+        .precios-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .precio-card {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            transition: transform 0.3s;
+            border-top: 5px solid #e25e00;
+        }
+
+        .precio-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .precio-card h3 {
+            color: #182a47;
+            margin-bottom: 10px;
+            font-size: 1.5rem;
+        }
+
+        .precio {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #e25e00;
+            margin: 15px 0;
+        }
+
+        .precio small {
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        .precio-card ul {
+            list-style: none;
+            text-align: left;
+            margin: 20px 0;
+        }
+
+        .precio-card ul li {
+            margin: 10px 0;
+            color: #555;
+        }
+
+        .extras {
+            background-color: #f0f7f0;
+            padding: 15px;
+            border-radius: 12px;
+            margin: 15px 0;
+            font-size: 0.9rem;
+        }
+
+        .extras h4 {
+            color: #2f5f4a;
+            margin-bottom: 10px;
+        }
+
+        .badge {
+            display: inline-block;
+            background-color: #2f5f4a;
+            color: #ffffff;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            margin-top: 5px;
+        }
+
+        .asesorias {
+            padding: 80px 0;
+            background-color: #ffffff;
         }
 
         .asesorias h2 {
@@ -226,7 +315,7 @@
         }
 
         .tema-card {
-            background: #ffffff;
+            background: #f8f9fa;
             padding: 25px;
             border-radius: 16px;
             text-align: center;
@@ -285,6 +374,10 @@
             font-size: 0.9rem;
         }
 
+        .centrar {
+            text-align: center;
+        }
+
         @media (max-width: 768px) {
             header .container {
                 flex-direction: column;
@@ -299,7 +392,7 @@
                 font-size: 2rem;
             }
             
-            .cursos-grid, .temas-grid {
+            .cursos-grid, .precios-grid, .temas-grid {
                 grid-template-columns: 1fr;
             }
         }
@@ -321,6 +414,7 @@
                 <ul>
                     <li><a href="#inicio">Inicio</a></li>
                     <li><a href="#cursos">Cursos</a></li>
+                    <li><a href="#precios">Precios</a></li>
                     <li><a href="#asesorias">Asesorías</a></li>
                     <li><a href="#contacto">Contacto</a></li>
                     <li><a href="#" class="btn-nav">Inscribirse</a></li>
@@ -344,26 +438,96 @@
                 <div class="curso-card">
                     <div class="curso-icono">🔬📐</div>
                     <h3>Curso EXCOBA</h3>
+                    <div class="precio-curso">$2,500 MXN</div>
                     <p>Preparación completa para el examen de ingreso a ingenierías. Física y matemáticas.</p>
+                    <div class="badge">+ Extensión disponible</div>
                     <a href="excoba.html" class="btn-curso">Ver curso →</a>
+                </div>
+                <div class="curso-card">
+                    <div class="curso-icono">📖✏️</div>
+                    <h3>Secundaria en un examen</h3>
+                    <div class="precio-curso">$2,000 MXN</div>
+                    <p>Preparación para acreditar secundaria con un solo examen. Matemáticas completo.</p>
+                    <a href="secundaria.html" class="btn-curso">Ver curso →</a>
                 </div>
                 <div class="curso-card">
                     <div class="curso-icono">📘✅</div>
                     <h3>Curso CENEVAL</h3>
+                    <div class="precio-curso">$1,800 MXN</div>
                     <p>Preparación para el examen CENEVAL de ingreso a licenciatura. Todas las áreas.</p>
                     <a href="#" class="btn-curso btn-secundario">Próximamente →</a>
                 </div>
                 <div class="curso-card">
                     <div class="curso-icono">🎓⚡</div>
                     <h3>Prepa en un examen</h3>
+                    <div class="precio-curso">$2,200 MXN</div>
                     <p>Acredita tu preparatoria con un solo examen. Preparamos en todas las materias.</p>
                     <a href="#" class="btn-curso btn-secundario">Próximamente →</a>
                 </div>
-                <div class="curso-card">
-                    <div class="curso-icono">📖✏️</div>
-                    <h3>Secundaria en un examen</h3>
-                    <p>Preparación para acreditar secundaria con un solo examen. Temario completo.</p>
-                    <a href="#" class="btn-curso btn-secundario">Próximamente →</a>
+            </div>
+        </div>
+    </section>
+
+    <section id="precios" class="precios">
+        <div class="container">
+            <h2>💰 Detalle de inversión</h2>
+            <p class="subtitulo">Precios accesibles y opciones de pago único</p>
+            <div class="precios-grid">
+                
+                <!-- Curso EXCOBA -->
+                <div class="precio-card">
+                    <h3>📘 Curso EXCOBA</h3>
+                    <div class="precio">$2,500 MXN</div>
+                    <p>Pago único · 12 semanas</p>
+                    <ul>
+                        <li>✅ 12 semanas de duración</li>
+                        <li>✅ Material descargable (PDF, videos)</li>
+                        <li>✅ Cuestionarios semanales en Google Forms</li>
+                        <li>✅ Sesiones en vivo los viernes</li>
+                        <li>✅ Simuladores cada 4 semanas</li>
+                        <li>✅ Simulador final del examen completo</li>
+                        <li>✅ Acompañamiento personalizado</li>
+                    </ul>
+                    <div class="extras">
+                        <h4>🎯 Extensión disponible</h4>
+                        <p><strong>$3,000 MXN adicionales</strong></p>
+                        <p>2 semanas extras con las demás materias del EXCOBA (no solo física y matemáticas).</p>
+                        <p><small>⚠️ Solo material de estudio, sin acompañamiento en esas 2 semanas.</small></p>
+                    </div>
+                    <a href="excoba.html" class="btn-curso">Ver curso completo →</a>
+                </div>
+
+                <!-- Curso Secundaria -->
+                <div class="precio-card">
+                    <h3>📖 Secundaria en un examen</h3>
+                    <div class="precio">$2,000 MXN</div>
+                    <p>Pago único · 8 semanas</p>
+                    <ul>
+                        <li>✅ 8 semanas de duración</li>
+                        <li>✅ Material teórico semanal (PDF + videos)</li>
+                        <li>✅ Dos formularios semanales (Google Forms)</li>
+                        <li>✅ Sesión en vivo los viernes (1-2 horas)</li>
+                        <li>✅ Dos simulacros de examen</li>
+                        <li>✅ Seguimiento personalizado</li>
+                        <li>✅ Temario completo basado en NEM</li>
+                    </ul>
+                    <a href="secundaria.html" class="btn-curso">Ver curso completo →</a>
+                </div>
+
+                <!-- Asesorías -->
+                <div class="precio-card">
+                    <h3>📐 Asesorías por tema</h3>
+                    <div class="precio">$350 MXN</div>
+                    <p>Por hora · Clase 1 a 1</p>
+                    <ul>
+                        <li>✅ Clase personalizada en línea</li>
+                        <li>✅ Horario flexible</li>
+                        <li>✅ Enfoque en tus dudas específicas</li>
+                        <li>✅ Material de apoyo incluido</li>
+                        <li>✅ Resolución de ejercicios</li>
+                    </ul>
+                    <p><strong>Temas disponibles:</strong> Álgebra, Geometría, Cálculo, Física</p>
+                    <a href="#contacto" class="btn-curso">Solicitar información →</a>
                 </div>
             </div>
         </div>
@@ -377,17 +541,17 @@
                 <div class="tema-card">
                     <h3>📐 Álgebra</h3>
                     <p>Ecuaciones, polinomios, factorización, sistemas y más.</p>
-                    <small>Duración: 1 hora | En línea</small>
+                    <small>$350 MXN / hora</small>
                 </div>
                 <div class="tema-card">
                     <h3>📏 Geometría</h3>
                     <p>Áreas, perímetros, teoremas, geometría analítica.</p>
-                    <small>Duración: 1 hora | En línea</small>
+                    <small>$350 MXN / hora</small>
                 </div>
                 <div class="tema-card">
                     <h3>📈 Cálculo</h3>
                     <p>Límites, derivadas, integrales y aplicaciones.</p>
-                    <small>Duración: 1 hora | En línea</small>
+                    <small>$350 MXN / hora</small>
                 </div>
             </div>
             <div class="centrar" style="text-align: center; margin-top: 30px;">
@@ -409,7 +573,7 @@
     <footer>
         <div class="container">
             <p>&copy; 2026 KUNA Academia - Preparación para exámenes y asesorías</p>
-            <p><small>Todos los derechos reservados</small></p>
+            <p><small>Todos los derechos reservados | Formas de pago: Transferencia bancaria o Mercado Pago</small></p>
         </div>
     </footer>
 
