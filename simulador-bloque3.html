@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Simulador EXCOBA - Bloque 3 (Semanas 9-12) | KUNA Academia</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #0f2b4d, #1e3c72);
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+        .header h1 { font-size: 1.8rem; margin-bottom: 10px; }
+        .header p { opacity: 0.9; font-size: 0.95rem; }
+        .stats-bar {
+            background: #ff6b35;
+            color: white;
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+            font-weight: bold;
+        }
+        .timer-section, .question-counter {
+            background: rgba(0,0,0,0.2);
+            padding: 5px 15px;
+            border-radius: 30px;
+        }
+        .timer-section.warning {
+            background: #d32f2f;
+            animation: pulse 1s infinite;
+        }
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+        .quiz-body { padding: 30px; max-height: 60vh; overflow-y: auto; }
+        .question-card {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 25px;
+            border-left: 5px solid #ff6b35;
+        }
+        .question-text { font-size: 1rem; font-weight: 600; margin-bottom: 15px; color: #1e3c72; }
+        .question-tag {
+            display: inline-block;
+            background: #e9ecef;
+            padding: 3px 10px;
+            border-radius: 15px;
+            font-size: 0.7rem;
+            margin-bottom: 10px;
+            color: #495057;
+        }
+        .options { list-style: none; padding-left: 0; }
+        .options li {
+            margin: 12px 0;
+            padding: 12px 15px;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .options li:hover { background: #e9ecef; transform: translateX(5px); }
+        .options li.selected {
+            background: #d1e7ff;
+            border-color: #ff6b35;
+            border-left: 4px solid #ff6b35;
+        }
+        .btn-submit {
+            background: #ff6b35;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            border-radius: 40px;
+            cursor: pointer;
+            width: 100%;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+        .btn-submit:hover { background: #e55a2b; }
+        .btn-submit:disabled { background: #ccc; cursor: not-allowed; }
+        .results {
+            background: #e8f5e9;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+            text-align: center;
+            display: none;
+        }
+        .results.show { display: block; animation: fadeIn 0.5s; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px);}
+            to { opacity: 1; transform: translateY(0);}
+        }
+        .score { font-size: 2.5rem; font-weight: bold; color: #2e7d32; }
+        .restart-btn {
+            background: #1e3c72;
+            margin-top: 15px;
+            display: inline-block;
+            padding: 10px 25px;
+            border-radius: 30px;
+            color: white;
+            cursor: pointer;
+            border: none;
+        }
+        footer {
+            text-align: center;
+            padding: 15px;
+            background: #f1f3f5;
+            font-size: 0.8rem;
+            color: #6c757d;
+        }
+        @media (max-width: 768px) {
+            .quiz-body { padding: 20px; }
+            .question-text { font-size: 0.9rem; }
+            .stats-bar { flex-direction: column; text-align: center; }
+        }
+        .progress-bar-container {
+            background: #e0e0e0;
+            border-radius: 10px;
+            margin: 15px 0;
+            height: 8px;
+        }
+        .progress-bar {
+            background: #ff6b35;
+            border-radius: 10px;
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s;
+        }
+        .login-container {
+            max-width: 450px;
+            width: 100%;
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            animation: fadeIn 0.5s;
+        }
+        .login-header {
+            background: linear-gradient(135deg, #0f2b4d, #1e3c72);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        .login-body { padding: 30px; }
+        .login-body input {
+            width: 100%;
+            padding: 15px;
+            font-size: 1rem;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        .login-body input:focus { outline: none; border-color: #ff6b35; }
+        .login-body button {
+            width: 100%;
+            background: #ff6b35;
+            color: white;
+            border: none;
+            padding: 15px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 40px;
+            cursor: pointer;
+        }
+        .error-message {
+            background: #ffebee;
+            color: #d32f2f;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+<div id="loginContainer" class="login-container" style="margin: 0 auto;">
+    <div class="login-header">
+        <h1>🔐 Acceso Restringido</h1>
+        <p>Simulador EXCOBA - Bloque 3 (Semanas 9-12)</p>
+    </div>
+    <div class="login-body">
+        <div class="error-message" id="errorMessage">❌ Contraseña incorrecta. Intenta de nuevo.</div>
+        <input type="password" id="passwordInput" placeholder="Ingresa la contraseña" autocomplete="off">
+        <button id="loginBtn">Acceder al Simulador</button>
+        <p style="margin-top: 15px; font-size: 0.8rem; color: #666; text-align: center;">⚠️ Contraseña proporcionada por tu instructor</p>
+    </div>
+</div>
+
+<div class="container" id="mainContainer" style="display: none;">
+    <div class="header">
+        <h1>📘 Simulador EXCOBA - Bloque 3</h1>
+        <p>Semanas 9-12: Dinámica, Energía, Fluidos, Termodinámica, Electricidad y Ondas | 25 preguntas | 25 minutos</p>
+    </div>
+    <div class="stats-bar">
+        <div class="timer-section" id="timerDisplay">⏱️ Tiempo: 00:25:00</div>
+        <div class="question-counter" id="counterDisplay">📋 Respondidas: 0 de 25</div>
+    </div>
+    <div class="quiz-body" id="quizBody">
+        <div id="questionsContainer"></div>
+        <button class="btn-submit" id="submitBtn">✅ Finalizar y calificar</button>
+        <div id="results" class="results"></div>
+    </div>
+    <div class="progress-bar-container">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+    <footer>Simulador EXCOBA - Bloque 3 | Banco de 50 preguntas | 25 preguntas aleatorias por intento</footer>
+</div>
+
+<script>
+    const ACCESS_PASSWORD = "EXCOBA2026";
+    
+    // Banco de 50 preguntas (Semanas 9-12)
+    const questionBank = [
+        // Dinámica (12)
+        { text: "Segunda Ley de Newton: F = ?", options: ["m·a", "m·v", "p·v", "m·g"], correct: 0, tema: "Dinámica" },
+        { text: "Un objeto de 5 kg recibe 20 N. ¿Aceleración?", options: ["4 m/s²", "5 m/s²", "2 m/s²", "10 m/s²"], correct: 0, tema: "Dinámica" },
+        { text: "Peso de un objeto de 10 kg (g=9.8 m/s²)", options: ["98 N", "10 N", "9.8 N", "980 N"], correct: 0, tema: "Dinámica" },
+        { text: "Primera Ley de Newton: Ley de la...", options: ["Inercia", "Acción-Reacción", "Gravedad", "Conservación"], correct: 0, tema: "Dinámica" },
+        { text: "Tercera Ley de Newton: Acción y reacción son...", options: ["Iguales y opuestas", "Diferentes", "En la misma dirección", "Solo verticales"], correct: 0, tema: "Dinámica" },
+        { text: "Fuerza de rozamiento estático actúa cuando...", options: ["El objeto está en reposo", "El objeto se mueve", "No hay contacto", "El objeto cae"], correct: 0, tema: "Dinámica" },
+        { text: "Un objeto de 2 kg cae libremente. ¿Fuerza gravitacional?", options: ["19.6 N", "2 N", "9.8 N", "4.9 N"], correct: 0, tema: "Dinámica" },
+        { text: "Si la masa se duplica y la fuerza se mantiene, la aceleración...", options: ["Se reduce a la mitad", "Se duplica", "No cambia", "Se cuadruplica"], correct: 0, tema: "Dinámica" },
+        { text: "Unidades de fuerza en el SI", options: ["Newton", "Joule", "Watt", "Pascal"], correct: 0, tema: "Dinámica" },
+        { text: "Fuerza neta cero implica...", options: ["Velocidad constante", "Aceleración constante", "Movimiento circular", "Reposo absoluto"], correct: 0, tema: "Dinámica" },
+        { text: "¿Cuánto pesa un objeto de 50 kg en la Tierra? (g=10)", options: ["500 N", "50 N", "5 N", "5000 N"], correct: 0, tema: "Dinámica" },
+        { text: "Un bloque de 2 kg se acelera a 3 m/s². ¿Fuerza?", options: ["6 N", "1.5 N", "2 N", "3 N"], correct: 0, tema: "Dinámica" },
+        // Energía (10)
+        { text: "Fórmula de Energía Cinética", options: ["½mv²", "mgh", "F·d", "m·a"], correct: 0, tema: "Energía" },
+        { text: "Un objeto de 2 kg a 3 m/s tiene Ek de:", options: ["9 J", "6 J", "18 J", "3 J"], correct: 0, tema: "Energía" },
+        { text: "Fórmula de Energía Potencial Gravitatoria", options: ["mgh", "½mv²", "F·d", "m·a"], correct: 0, tema: "Energía" },
+        { text: "Trabajo = F·d cuando...", options: ["Fuerza y desplazamiento son paralelos", "Fuerza y desplazamiento son perpendiculares", "No hay desplazamiento", "Fuerza es cero"], correct: 0, tema: "Energía" },
+        { text: "Un objeto de 5 kg a 4 m de altura. ¿Ep? (g=10)", options: ["200 J", "80 J", "20 J", "100 J"], correct: 0, tema: "Energía" },
+        { text: "Principio de conservación de la energía", options: ["La energía no se crea ni se destruye, solo se transforma", "La energía se pierde siempre", "La energía aumenta con el tiempo", "La energía es constante solo en sistemas cerrados"], correct: 0, tema: "Energía" },
+        { text: "Unidad de trabajo y energía en el SI", options: ["Joule", "Newton", "Watt", "Pascal"], correct: 0, tema: "Energía" },
+        { text: "Una fuerza de 10 N desplaza un objeto 5 m. ¿Trabajo?", options: ["50 J", "2 J", "15 J", "0 J"], correct: 0, tema: "Energía" },
+        { text: "Energía potencial elástica depende de...", options: ["Constante del resorte y deformación", "Masa y altura", "Velocidad", "Fuerza"], correct: 0, tema: "Energía" },
+        { text: "Un objeto de 4 kg cae de 10 m. ¿Velocidad al llegar al suelo? (g=10, sin fricción)", options: ["14.14 m/s", "10 m/s", "20 m/s", "5 m/s"], correct: 0, tema: "Energía" },
+        // Fluidos (8)
+        { text: "Presión hidrostática depende de:", options: ["Densidad, gravedad y altura", "Masa y volumen", "Fuerza y área", "Temperatura"], correct: 0, tema: "Fluidos" },
+        { text: "Principio de Pascal: La presión se transmite...", options: ["Íntegramente en todas direcciones", "Solo hacia arriba", "Solo hacia abajo", "Depende del fluido"], correct: 0, tema: "Fluidos" },
+        { text: "Principio de Arquímedes: El empuje es igual a...", options: ["Peso del fluido desplazado", "Peso del objeto", "Volumen del objeto", "Densidad del objeto"], correct: 0, tema: "Fluidos" },
+        { text: "Unidad de presión en el SI", options: ["Pascal", "Newton", "Joule", "Watt"], correct: 0, tema: "Fluidos" },
+        { text: "Un objeto flota si...", options: ["Densidad objeto < densidad fluido", "Densidad objeto > densidad fluido", "Densidad objeto = densidad fluido", "Peso > empuje"], correct: 0, tema: "Fluidos" },
+        { text: "Fórmula de presión hidrostática", options: ["P = ρ·g·h", "P = F·A", "P = m·g", "P = ρ·V"], correct: 0, tema: "Fluidos" },
+        { text: "En una prensa hidráulica, F1/A1 = F2/A2. Esto es el principio de...", options: ["Pascal", "Arquímedes", "Bernoulli", "Torricelli"], correct: 0, tema: "Fluidos" },
+        { text: "Un objeto de 2 kg y volumen 0.003 m³ sumergido en agua. ¿Empuje? (ρagua=1000 kg/m³, g=10)", options: ["30 N", "20 N", "10 N", "40 N"], correct: 0, tema: "Fluidos" },
+        // Electricidad (10)
+        { text: "Ley de Ohm: V = ?", options: ["I·R", "P·I", "R/I", "I/R"], correct: 0, tema: "Electricidad" },
+        { text: "Un resistor de 5Ω con 10V. ¿Corriente?", options: ["2 A", "0.5 A", "5 A", "10 A"], correct: 0, tema: "Electricidad" },
+        { text: "En un circuito en serie, la corriente es...", options: ["La misma en todos los elementos", "Diferente en cada elemento", "Depende de la resistencia", "Nula"], correct: 0, tema: "Electricidad" },
+        { text: "Unidad de resistencia eléctrica", options: ["Ohm", "Voltio", "Amperio", "Watt"], correct: 0, tema: "Electricidad" },
+        { text: "Potencia eléctrica: P = ?", options: ["V·I", "V/I", "I/R", "R·I"], correct: 0, tema: "Electricidad" },
+        { text: "En un circuito en paralelo, el voltaje es...", options: ["El mismo en todas las ramas", "Diferente en cada rama", "Depende de la resistencia", "Cero"], correct: 0, tema: "Electricidad" },
+        { text: "Un foco de 60 W conectado a 120 V. ¿Corriente?", options: ["0.5 A", "2 A", "1 A", "0.25 A"], correct: 0, tema: "Electricidad" },
+        { text: "Resistencia equivalente de 2Ω y 3Ω en serie", options: ["5Ω", "6Ω", "1.2Ω", "1Ω"], correct: 0, tema: "Electricidad" },
+        { text: "Unidad de carga eléctrica", options: ["Coulomb", "Voltio", "Amperio", "Ohm"], correct: 0, tema: "Electricidad" },
+        { text: "Ley de Coulomb relaciona fuerza con...", options: ["Cargas y distancia", "Cargas y tiempo", "Voltaje y corriente", "Resistencia y voltaje"], correct: 0, tema: "Electricidad" },
+        // Ondas (10)
+        { text: "¿Qué es la reflexión de la luz?", options: ["Rebote de la luz en una superficie", "Paso de la luz a otro medio", "Desvío de la luz", "Absorción de la luz"], correct: 0, tema: "Ondas" },
+        { text: "¿Qué es la refracción de la luz?", options: ["Cambio de dirección al pasar de un medio a otro", "Rebote de la luz", "Absorción de la luz", "Dispersión de la luz"], correct: 0, tema: "Ondas" },
+        { text: "Frecuencia y periodo son...", options: ["Inversamente proporcionales", "Directamente proporcionales", "Iguales", "No se relacionan"], correct: 0, tema: "Ondas" },
+        { text: "Velocidad de la luz en el vacío", options: ["3×10⁸ m/s", "3×10⁶ m/s", "3×10⁵ m/s", "3×10⁹ m/s"], correct: 0, tema: "Ondas" },
+        { text: "Unidad de frecuencia", options: ["Hertz", "Metro", "Segundo", "Joule"], correct: 0, tema: "Ondas" },
+        { text: "Longitud de onda (λ) = ?", options: ["v/f", "v·f", "f/v", "v·t"], correct: 0, tema: "Ondas" },
+        { text: "Una onda con frecuencia 50 Hz tiene periodo:", options: ["0.02 s", "0.2 s", "2 s", "0.002 s"], correct: 0, tema: "Ondas" },
+        { text: "El sonido es una onda...", options: ["Mecánica longitudinal", "Mecánica transversal", "Electromagnética", "Estacionaria"], correct: 0, tema: "Ondas" },
+        { text: "La luz es una onda...", options: ["Electromagnética", "Mecánica", "Longitudinal", "Transversal solo en sólidos"], correct: 0, tema: "Ondas" },
+        { text: "Ecuación de velocidad de onda: v = ?", options: ["λ·f", "λ/f", "f/λ", "λ·T"], correct: 0, tema: "Ondas" }
+    ];
+
+    const TOTAL_QUESTIONS = 25;
+    const TIME_LIMIT_MIN = 25;
+    
+    let currentQuestions = [];
+    let userAnswers = new Array(TOTAL_QUESTIONS).fill(null);
+    let timer;
+    let timeLeft = TIME_LIMIT_MIN * 60;
+    let examFinished = false;
+
+    function shuffleArray(arr) {
+        for (let i = arr.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        return arr;
+    }
+
+    function selectRandomQuestions() {
+        const shuffledBank = shuffleArray([...questionBank]);
+        return shuffledBank.slice(0, TOTAL_QUESTIONS);
+    }
+
+    function renderQuestions() {
+        const container = document.getElementById('questionsContainer');
+        container.innerHTML = '';
+        currentQuestions.forEach((q, idx) => {
+            const card = document.createElement('div');
+            card.className = 'question-card';
+            card.innerHTML = `
+                <div class="question-tag">📚 ${q.tema}</div>
+                <div class="question-text">${idx+1}. ${q.text}</div>
+                <ul class="options" data-qidx="${idx}">
+                    ${q.options.map((opt, optIdx) => `<li data-optidx="${optIdx}">${String.fromCharCode(65+optIdx)}. ${opt}</li>`).join('')}
+                </ul>
+            `;
+            container.appendChild(card);
+        });
+        document.querySelectorAll('.options').forEach(optContainer => {
+            const qIdx = parseInt(optContainer.dataset.qidx);
+            optContainer.querySelectorAll('li').forEach(li => {
+                const optIdx = parseInt(li.dataset.optidx);
+                li.addEventListener('click', () => {
+                    if (examFinished) return;
+                    optContainer.querySelectorAll('li').forEach(l => l.classList.remove('selected'));
+                    li.classList.add('selected');
+                    userAnswers[qIdx] = optIdx;
+                    updateCounterAndProgress();
+                });
+                if (userAnswers[qIdx] === optIdx) li.classList.add('selected');
+            });
+        });
+        updateCounterAndProgress();
+    }
+
+    function updateCounterAndProgress() {
+        const answered = userAnswers.filter(a => a !== null).length;
+        document.getElementById('counterDisplay').innerHTML = `📋 Respondidas: ${answered} de ${TOTAL_QUESTIONS}`;
+        const progressPercent = (answered / TOTAL_QUESTIONS) * 100;
+        document.getElementById('progressBar').style.width = `${progressPercent}%`;
+    }
+
+    function formatTime(seconds) {
+        const minutes = Math.floor(seconds / 60);
+        const secs = seconds % 60;
+        return `${minutes.toString().padStart(2,'0')}:${secs.toString().padStart(2,'0')}`;
+    }
+
+    function updateTimerDisplay() {
+        const timerElement = document.getElementById('timerDisplay');
+        timerElement.innerHTML = `⏱️ Tiempo: ${formatTime(timeLeft)}`;
+        if (timeLeft <= 300 && timeLeft > 0) timerElement.classList.add('warning');
+        else timerElement.classList.remove('warning');
+        if (timeLeft <= 0 && !examFinished) {
+            clearInterval(timer);
+            examFinished = true;
+            alert("⏰ Tiempo agotado. El examen se calificará automáticamente.");
+            gradeExam();
+        }
+    }
+
+    function startTimer() {
+        timer = setInterval(() => {
+            if (timeLeft > 0 && !examFinished) {
+                timeLeft--;
+                updateTimerDisplay();
+            } else if (timeLeft <= 0 && !examFinished) {
+                clearInterval(timer);
+                examFinished = true;
+                gradeExam();
+            }
+        }, 1000);
+    }
+
+    function gradeExam() {
+        if (examFinished) return;
+        examFinished = true;
+        clearInterval(timer);
+        let correctCount = 0;
+        currentQuestions.forEach((q, idx) => {
+            if (userAnswers[idx] !== null && userAnswers[idx] === q.correct) correctCount++;
+        });
+        const percentage = (correctCount / TOTAL_QUESTIONS) * 100;
+        const resultDiv = document.getElementById('results');
+        let verdict = percentage >= 70 ? '🎉 ¡APROBADO! Sólido conocimiento.' : (percentage >= 50 ? '📚 Cerca, necesitas repasar más.' : '⚠️ No alcanzaste el puntaje. Sigue practicando.');
+        resultDiv.innerHTML = `
+            <div class="score">${correctCount} / ${TOTAL_QUESTIONS}</div>
+            <p style="font-size:1.2rem; margin:10px 0">Calificación: ${percentage.toFixed(1)}%</p>
+            <p style="font-weight:bold; color:#d32f2f">${verdict}</p>
+            <p style="margin-top:15px; font-size:0.9rem;">✨ Al hacer otro simulacro, tendrás 25 preguntas nuevas ✨</p>
+            <button class="restart-btn" id="restartBtn">🔄 Realizar otro simulacro</button>
+        `;
+        resultDiv.classList.add('show');
+        document.getElementById('submitBtn').disabled = true;
+        document.getElementById('submitBtn').style.opacity = '0.6';
+        document.getElementById('restartBtn').addEventListener('click', () => location.reload());
+    }
+
+    function initSimulator() {
+        currentQuestions = selectRandomQuestions();
+        userAnswers = new Array(TOTAL_QUESTIONS).fill(null);
+        renderQuestions();
+        startTimer();
+    }
+
+    function checkPassword() {
+        if (document.getElementById('passwordInput').value === ACCESS_PASSWORD) {
+            document.getElementById('loginContainer').style.display = 'none';
+            document.getElementById('mainContainer').style.display = 'block';
+            initSimulator();
+        } else {
+            document.getElementById('errorMessage').style.display = 'block';
+            document.getElementById('passwordInput').value = '';
+        }
+    }
+    document.getElementById('loginBtn').addEventListener('click', checkPassword);
+    document.getElementById('passwordInput').addEventListener('keypress', e => { if (e.key === 'Enter') checkPassword(); });
+    document.getElementById('submitBtn').addEventListener('click', () => { if (!examFinished && confirm("¿Finalizar examen?")) gradeExam(); });
+</script>
+</body>
+</html>

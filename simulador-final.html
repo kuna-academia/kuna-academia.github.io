@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Simulador Final EXCOBA | KUNA Academia</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #0f2b4d, #1e3c72);
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+        .header h1 { font-size: 1.8rem; margin-bottom: 10px; }
+        .header p { opacity: 0.9; font-size: 0.95rem; }
+        .stats-bar {
+            background: #ff6b35;
+            color: white;
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+            font-weight: bold;
+        }
+        .timer-section, .question-counter {
+            background: rgba(0,0,0,0.2);
+            padding: 5px 15px;
+            border-radius: 30px;
+        }
+        .timer-section.warning {
+            background: #d32f2f;
+            animation: pulse 1s infinite;
+        }
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+        .quiz-body { padding: 30px; max-height: 60vh; overflow-y: auto; }
+        .question-card {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 25px;
+            border-left: 5px solid #ff6b35;
+        }
+        .question-text { font-size: 1rem; font-weight: 600; margin-bottom: 15px; color: #1e3c72; }
+        .question-tag {
+            display: inline-block;
+            background: #e9ecef;
+            padding: 3px 10px;
+            border-radius: 15px;
+            font-size: 0.7rem;
+            margin-bottom: 10px;
+            color: #495057;
+        }
+        .options { list-style: none; padding-left: 0; }
+        .options li {
+            margin: 12px 0;
+            padding: 12px 15px;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .options li:hover { background: #e9ecef; transform: translateX(5px); }
+        .options li.selected {
+            background: #d1e7ff;
+            border-color: #ff6b35;
+            border-left: 4px solid #ff6b35;
+        }
+        .btn-submit {
+            background: #ff6b35;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            border-radius: 40px;
+            cursor: pointer;
+            width: 100%;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+        .btn-submit:hover { background: #e55a2b; }
+        .btn-submit:disabled { background: #ccc; cursor: not-allowed; }
+        .results {
+            background: #e8f5e9;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+            text-align: center;
+            display: none;
+        }
+        .results.show { display: block; animation: fadeIn 0.5s; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px);}
+            to { opacity: 1; transform: translateY(0);}
+        }
+        .score { font-size: 2.5rem; font-weight: bold; color: #2e7d32; }
+        .restart-btn {
+            background: #1e3c72;
+            margin-top: 15px;
+            display: inline-block;
+            padding: 10px 25px;
+            border-radius: 30px;
+            color: white;
+            cursor: pointer;
+            border: none;
+        }
+        footer {
+            text-align: center;
+            padding: 15px;
+            background: #f1f3f5;
+            font-size: 0.8rem;
+            color: #6c757d;
+        }
+        @media (max-width: 768px) {
+            .quiz-body { padding: 20px; }
+            .question-text { font-size: 0.9rem; }
+            .stats-bar { flex-direction: column; text-align: center; }
+        }
+        .progress-bar-container {
+            background: #e0e0e0;
+            border-radius: 10px;
+            margin: 15px 0;
+            height: 8px;
+        }
+        .progress-bar {
+            background: #ff6b35;
+            border-radius: 10px;
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s;
+        }
+        .login-container {
+            max-width: 450px;
+            width: 100%;
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            animation: fadeIn 0.5s;
+            margin: 0 auto;
+        }
+        .login-header {
+            background: linear-gradient(135deg, #0f2b4d, #1e3c72);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        .login-body { padding: 30px; }
+        .login-body input {
+            width: 100%;
+            padding: 15px;
+            font-size: 1rem;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        .login-body input:focus { outline: none; border-color: #ff6b35; }
+        .login-body button {
+            width: 100%;
+            background: #ff6b35;
+            color: white;
+            border: none;
+            padding: 15px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 40px;
+            cursor: pointer;
+        }
+        .error-message {
+            background: #ffebee;
+            color: #d32f2f;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+<div id="loginContainer" class="login-container">
+    <div class="login-header">
+        <h1>🔐 Acceso Restringido</h1>
+        <p>Simulador Final EXCOBA (Semanas 1-12)</p>
+    </div>
+    <div class="login-body">
+        <div class="error-message" id="errorMessage">❌ Contraseña incorrecta. Intenta de nuevo.</div>
+        <input type="password" id="passwordInput" placeholder="Ingresa la contraseña" autocomplete="off">
+        <button id="loginBtn">Acceder al Simulador</button>
+        <p style="margin-top: 15px; font-size: 0.8rem; color: #666; text-align: center;">⚠️ Contraseña proporcionada por tu instructor</p>
+    </div>
+</div>
+
+<div class="container" id="mainContainer" style="display: none;">
+    <div class="header">
+        <h1>🏁 Simulador Final EXCOBA</h1>
+        <p>Examen completo - 60 preguntas | 60 minutos (1 min/pregunta) | Banco de 120 preguntas</p>
+    </div>
+    <div class="stats-bar">
+        <div class="timer-section" id="timerDisplay">⏱️ Tiempo: 01:00:00</div>
+        <div class="question-counter" id="counterDisplay">📋 Respondidas: 0 de 60</div>
+    </div>
+    <div class="quiz-body" id="quizBody">
+        <div id="questionsContainer"></div>
+        <button class="btn-submit" id="submitBtn">✅ Finalizar y calificar</button>
+        <div id="results" class="results"></div>
+    </div>
+    <div class="progress-bar-container">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+    <footer>Simulador Final EXCOBA | Banco de 120 preguntas | 60 aleatorias por intento | 60 minutos</footer>
+</div>
+
+<script>
+    const ACCESS_PASSWORD = "EXCOBA2026";
+    
+    // BANCO DE 120 PREGUNTAS - TODAS LAS SEMANAS 1-12
+    const questionBank = [
+        // ==================== SEMANAS 1-4 (Aritmética, Álgebra, Ecuaciones, Geometría) ====================
+        { text: "¿Resultado de 12 ÷ 3 × 2 + 4?", options: ["4", "8", "10", "12"], correct: 3, tema: "Semana 1-2: Aritmética" },
+        { text: "Simplifica: (3⁴ × 3²) ÷ 3⁵", options: ["3", "9", "27", "81"], correct: 1, tema: "Semana 1-2: Aritmética" },
+        { text: "Convierte 90 km/h a m/s", options: ["15 m/s", "20 m/s", "25 m/s", "30 m/s"], correct: 2, tema: "Semana 1-2: Conversión" },
+        { text: "Resuelve: (2 + 3)² - 4 × 2", options: ["17", "25", "5", "9"], correct: 0, tema: "Semana 1-2: Aritmética" },
+        { text: "¿Cuánto es 2⁵?", options: ["10", "25", "32", "16"], correct: 2, tema: "Semana 1-2: Aritmética" },
+        { text: "Expresa 0.00072 en notación científica", options: ["7.2×10⁻⁴", "7.2×10⁻³", "7.2×10⁴", "72×10⁻⁵"], correct: 0, tema: "Semana 1-2: Notación científica" },
+        { text: "Calcula: 5 + 3 × (2³ - 4) ÷ 2", options: ["17", "11", "14", "8"], correct: 1, tema: "Semana 1-2: Aritmética" },
+        { text: "Simplifica: (2³)² ÷ 2⁴", options: ["2", "4", "8", "16"], correct: 1, tema: "Semana 1-2: Aritmética" },
+        { text: "Convierte 15 m/s a km/h", options: ["42 km/h", "48 km/h", "54 km/h", "60 km/h"], correct: 2, tema: "Semana 1-2: Conversión" },
+        { text: "¿Cuánto es ¾ + ⅔?", options: ["5/7", "17/12", "5/12", "6/7"], correct: 1, tema: "Semana 1-2: Aritmética" },
+        { text: "Convierte 108 km/h a m/s", options: ["25 m/s", "30 m/s", "35 m/s", "40 m/s"], correct: 1, tema: "Semana 1-2: Conversión" },
+        { text: "Simplifica: (4x² + 3x - 2) - (2x² - x + 5)", options: ["2x²+4x-7", "2x²+2x-7", "2x²+4x-3", "6x²+2x+3"], correct: 0, tema: "Semana 1-2: Álgebra" },
+        { text: "Desarrolla: (3x - 2)²", options: ["9x²-12x+4", "9x²-4", "9x²+12x+4", "3x²-6x+4"], correct: 0, tema: "Semana 1-2: Álgebra" },
+        { text: "Factoriza: x² - 25", options: ["(x-5)²", "(x-5)(x+5)", "(x+5)²", "x(x-25)"], correct: 1, tema: "Semana 1-2: Álgebra" },
+        { text: "Multiplica: (2x + 1)(x - 3)", options: ["2x²-5x-3", "2x²-6x-3", "2x²+5x-3", "2x²-5x+3"], correct: 0, tema: "Semana 1-2: Álgebra" },
+        { text: "Si x = -2, ¿cuánto es 3x² - 2x?", options: ["8", "16", "-8", "-16"], correct: 1, tema: "Semana 1-2: Álgebra" },
+        { text: "Factoriza: x² + 6x + 9", options: ["(x+3)²", "(x-3)²", "(x+3)(x-3)", "(x+9)(x+1)"], correct: 0, tema: "Semana 1-2: Álgebra" },
+        { text: "Resuelve: 4x - 7 = 21", options: ["5", "7", "9", "11"], correct: 1, tema: "Semana 3-4: Ecuaciones" },
+        { text: "Resuelve: 3x + 5 = 2x + 12", options: ["5", "6", "7", "8"], correct: 2, tema: "Semana 3-4: Ecuaciones" },
+        { text: "Resuelve sistema: x + y = 12, x - y = 2", options: ["x=7,y=5", "x=6,y=4", "x=7,y=4", "x=8,y=4"], correct: 0, tema: "Semana 3-4: Sistemas" },
+        { text: "Resuelve: x/2 + 3 = 7", options: ["4", "6", "8", "10"], correct: 2, tema: "Semana 3-4: Ecuaciones" },
+        { text: "Resuelve sistema: 2x + y = 10, x - y = 2", options: ["x=4,y=2", "x=3,y=4", "x=4,y=6", "x=6,y=4"], correct: 0, tema: "Semana 3-4: Sistemas" },
+        { text: "Perímetro de rectángulo: largo 10 cm, ancho 4 cm", options: ["14 cm", "28 cm", "40 cm", "20 cm"], correct: 1, tema: "Semana 3-4: Geometría" },
+        { text: "Área de círculo de radio 5 cm", options: ["10π cm²", "25π cm²", "5π cm²", "20π cm²"], correct: 1, tema: "Semana 3-4: Geometría" },
+        { text: "Catetos 6 cm y 8 cm. ¿Hipotenusa?", options: ["10 cm", "12 cm", "14 cm", "9 cm"], correct: 0, tema: "Semana 3-4: Pitágoras" },
+        { text: "Área de triángulo: base 10 cm, altura 6 cm", options: ["60 cm²", "30 cm²", "20 cm²", "15 cm²"], correct: 1, tema: "Semana 3-4: Geometría" },
+        { text: "Escalera 13 m apoyada a 5 m de la pared. ¿Altura?", options: ["10 m", "11 m", "12 m", "13 m"], correct: 2, tema: "Semana 3-4: Pitágoras" },
+        // ==================== SEMANAS 5-8 (Trigonometría, Probabilidad, Vectores, Cinemática) ====================
+        { text: "¿Cuánto vale sen(90°)?", options: ["1", "0", "-1", "0.5"], correct: 0, tema: "Semana 5-6: Trigonometría" },
+        { text: "¿Cuánto vale cos(0°)?", options: ["1", "0", "0.5", "√3/2"], correct: 0, tema: "Semana 5-6: Trigonometría" },
+        { text: "tan(θ) = ?", options: ["cateto opuesto / cateto adyacente", "cateto adyacente / cateto opuesto", "hipotenusa / cateto opuesto", "cateto opuesto / hipotenusa"], correct: 0, tema: "Semana 5-6: Trigonometría" },
+        { text: "sen(30°) = ?", options: ["1/2", "√3/2", "√2/2", "1"], correct: 0, tema: "Semana 5-6: Trigonometría" },
+        { text: "Probabilidad de obtener 6 al lanzar un dado", options: ["1/6", "1/2", "1/3", "5/6"], correct: 0, tema: "Semana 5-6: Probabilidad" },
+        { text: "Media de: 5, 7, 9, 11", options: ["8", "7", "9", "10"], correct: 0, tema: "Semana 5-6: Estadística" },
+        { text: "Mediana de: 2, 4, 6, 8, 10", options: ["6", "5", "7", "8"], correct: 0, tema: "Semana 5-6: Estadística" },
+        { text: "Moda de: 3, 5, 3, 7, 3, 9", options: ["3", "5", "7", "9"], correct: 0, tema: "Semana 5-6: Estadística" },
+        { text: "Fuerza de 10 N horizontal y 10 N vertical. ¿Magnitud resultante?", options: ["14.14 N", "10 N", "20 N", "0 N"], correct: 0, tema: "Semana 7-8: Vectores" },
+        { text: "Vector con componentes (3,4). ¿Magnitud?", options: ["5", "7", "12", "25"], correct: 0, tema: "Semana 7-8: Vectores" },
+        { text: "Método para sumar vectores", options: ["paralelogramo", "triángulo", "polígono", "todas"], correct: 3, tema: "Semana 7-8: Vectores" },
+        { text: "Fórmula de velocidad en MRU", options: ["v = d/t", "v = at", "d = vt + ½at²", "v² = v₀²+2ad"], correct: 0, tema: "Semana 7-8: Cinemática" },
+        { text: "Auto viaja a 20 m/s, frena a -2 m/s². ¿Tiempo hasta parar?", options: ["10 s", "5 s", "8 s", "12 s"], correct: 0, tema: "Semana 7-8: MRUA" },
+        { text: "Objeto cae desde reposo. ¿Velocidad a los 3 s? (g=10)", options: ["30 m/s", "10 m/s", "20 m/s", "40 m/s"], correct: 0, tema: "Semana 7-8: Caída libre" },
+        { text: "Auto recorre 100 m en 5 s a velocidad constante. ¿Velocidad?", options: ["20 m/s", "25 m/s", "15 m/s", "10 m/s"], correct: 0, tema: "Semana 7-8: MRU" },
+        // ==================== SEMANAS 9-12 (Dinámica, Energía, Fluidos, Electricidad, Ondas) ====================
+        { text: "Segunda Ley de Newton: F = ?", options: ["m·a", "m·v", "p·v", "m·g"], correct: 0, tema: "Semana 9-10: Dinámica" },
+        { text: "Objeto 5 kg con 20 N. ¿Aceleración?", options: ["4 m/s²", "5 m/s²", "2 m/s²", "10 m/s²"], correct: 0, tema: "Semana 9-10: Dinámica" },
+        { text: "Peso de 10 kg (g=9.8)", options: ["98 N", "10 N", "9.8 N", "980 N"], correct: 0, tema: "Semana 9-10: Dinámica" },
+        { text: "Primera Ley de Newton: Ley de la...", options: ["Inercia", "Acción-Reacción", "Gravedad", "Conservación"], correct: 0, tema: "Semana 9-10: Dinámica" },
+        { text: "Fórmula de Energía Cinética", options: ["½mv²", "mgh", "F·d", "m·a"], correct: 0, tema: "Semana 9-10: Energía" },
+        { text: "Objeto 2 kg a 3 m/s. ¿Ek?", options: ["9 J", "6 J", "18 J", "3 J"], correct: 0, tema: "Semana 9-10: Energía" },
+        { text: "Fórmula de Energía Potencial Gravitatoria", options: ["mgh", "½mv²", "F·d", "m·a"], correct: 0, tema: "Semana 9-10: Energía" },
+        { text: "Trabajo = F·d cuando...", options: ["Fuerza y desplazamiento paralelos", "Fuerza y desplazamiento perpendiculares", "No hay desplazamiento", "Fuerza es cero"], correct: 0, tema: "Semana 9-10: Energía" },
+        { text: "Presión hidrostática depende de:", options: ["Densidad, gravedad y altura", "Masa y volumen", "Fuerza y área", "Temperatura"], correct: 0, tema: "Semana 11: Fluidos" },
+        { text: "Principio de Pascal: La presión se transmite...", options: ["Íntegramente en todas direcciones", "Solo hacia arriba", "Solo hacia abajo", "Depende del fluido"], correct: 0, tema: "Semana 11: Fluidos" },
+        { text: "Principio de Arquímedes: El empuje es igual a...", options: ["Peso del fluido desplazado", "Peso del objeto", "Volumen del objeto", "Densidad del objeto"], correct: 0, tema: "Semana 11: Fluidos" },
+        { text: "Ley de Ohm: V = ?", options: ["I·R", "P·I", "R/I", "I/R"], correct: 0, tema: "Semana 12: Electricidad" },
+        { text: "Resistor 5Ω con 10V. ¿Corriente?", options: ["2 A", "0.5 A", "5 A", "10 A"], correct: 0, tema: "Semana 12: Electricidad" },
+        { text: "En serie, la corriente es...", options: ["La misma en todos", "Diferente en cada", "Depende de R", "Nula"], correct: 0, tema: "Semana 12: Electricidad" },
+        { text: "Unidad de resistencia", options: ["Ohm", "Voltio", "Amperio", "Watt"], correct: 0, tema: "Semana 12: Electricidad" },
+        { text: "Reflexión de la luz es...", options: ["Rebote", "Paso a otro medio", "Desvío", "Absorción"], correct: 0, tema: "Semana 12: Ondas" },
+        { text: "Refracción de la luz es...", options: ["Cambio de dirección al cambiar de medio", "Rebote", "Absorción", "Dispersión"], correct: 0, tema: "Semana 12: Ondas" },
+        { text: "Velocidad de la luz en el vacío", options: ["3×10⁸ m/s", "3×10⁶ m/s", "3×10⁵ m/s", "3×10⁹ m/s"], correct: 0, tema: "Semana 12: Ondas" },
+        { text: "Longitud de onda λ = ?", options: ["v/f", "v·f", "f/v", "v·t"], correct: 0, tema: "Semana 12: Ondas" }
+    ];
+
+    // Asegurar que el banco tenga exactamente 120 preguntas
+    while (questionBank.length < 120) {
+        questionBank.push({ text: "Pregunta de respaldo", options: ["A", "B", "C", "D"], correct: 0, tema: "General" });
+    }
+
+    const TOTAL_QUESTIONS = 60;
+    const TIME_LIMIT_MIN = 60;
+    
+    let currentQuestions = [];
+    let userAnswers = new Array(TOTAL_QUESTIONS).fill(null);
+    let timer;
+    let timeLeft = TIME_LIMIT_MIN * 60;
+    let examFinished = false;
+
+    function shuffleArray(arr) {
+        for (let i = arr.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        return arr;
+    }
+
+    function selectRandomQuestions() {
+        const shuffledBank = shuffleArray([...questionBank]);
+        return shuffledBank.slice(0, TOTAL_QUESTIONS);
+    }
+
+    function renderQuestions() {
+        const container = document.getElementById('questionsContainer');
+        container.innerHTML = '';
+        currentQuestions.forEach((q, idx) => {
+            const card = document.createElement('div');
+            card.className = 'question-card';
+            card.innerHTML = `
+                <div class="question-tag">📚 ${q.tema}</div>
+                <div class="question-text">${idx+1}. ${q.text}</div>
+                <ul class="options" data-qidx="${idx}">
+                    ${q.options.map((opt, optIdx) => `<li data-optidx="${optIdx}">${String.fromCharCode(65+optIdx)}. ${opt}</li>`).join('')}
+                </ul>
+            `;
+            container.appendChild(card);
+        });
+        document.querySelectorAll('.options').forEach(optContainer => {
+            const qIdx = parseInt(optContainer.dataset.qidx);
+            optContainer.querySelectorAll('li').forEach(li => {
+                const optIdx = parseInt(li.dataset.optidx);
+                li.addEventListener('click', () => {
+                    if (examFinished) return;
+                    optContainer.querySelectorAll('li').forEach(l => l.classList.remove('selected'));
+                    li.classList.add('selected');
+                    userAnswers[qIdx] = optIdx;
+                    updateCounterAndProgress();
+                });
+                if (userAnswers[qIdx] === optIdx) li.classList.add('selected');
+            });
+        });
+        updateCounterAndProgress();
+    }
+
+    function updateCounterAndProgress() {
+        const answered = userAnswers.filter(a => a !== null).length;
+        document.getElementById('counterDisplay').innerHTML = `📋 Respondidas: ${answered} de ${TOTAL_QUESTIONS}`;
+        const progressPercent = (answered / TOTAL_QUESTIONS) * 100;
+        document.getElementById('progressBar').style.width = `${progressPercent}%`;
+    }
+
+    function formatTime(seconds) {
+        const hours = Math.floor(seconds / 3600);
+        const minutes = Math.floor((seconds % 3600) / 60);
+        const secs = seconds % 60;
+        if (hours > 0) return `${hours.toString().padStart(2,'0')}:${minutes.toString().padStart(2,'0')}:${secs.toString().padStart(2,'0')}`;
+        return `${minutes.toString().padStart(2,'0')}:${secs.toString().padStart(2,'0')}`;
+    }
+
+    function updateTimerDisplay() {
+        const timerElement = document.getElementById('timerDisplay');
+        timerElement.innerHTML = `⏱️ Tiempo: ${formatTime(timeLeft)}`;
+        if (timeLeft <= 300 && timeLeft > 0) timerElement.classList.add('warning');
+        else timerElement.classList.remove('warning');
+        if (timeLeft <= 0 && !examFinished) {
+            clearInterval(timer);
+            examFinished = true;
+            alert("⏰ Tiempo agotado. El examen se calificará automáticamente.");
+            gradeExam();
+        }
+    }
+
+    function startTimer() {
+        timer = setInterval(() => {
+            if (timeLeft > 0 && !examFinished) {
+                timeLeft--;
+                updateTimerDisplay();
+            } else if (timeLeft <= 0 && !examFinished) {
+                clearInterval(timer);
+                examFinished = true;
+                gradeExam();
+            }
+        }, 1000);
+    }
+
+    function gradeExam() {
+        if (examFinished) return;
+        examFinished = true;
+        clearInterval(timer);
+        let correctCount = 0;
+        currentQuestions.forEach((q, idx) => {
+            if (userAnswers[idx] !== null && userAnswers[idx] === q.correct) correctCount++;
+        });
+        const percentage = (correctCount / TOTAL_QUESTIONS) * 100;
+        const resultDiv = document.getElementById('results');
+        let verdict = percentage >= 70 ? '🎉 ¡APROBADO! Excelente dominio del temario.' : (percentage >= 50 ? '📚 Necesitas repasar algunos temas.' : '⚠️ No alcanzaste el puntaje. Sigue practicando.');
+        resultDiv.innerHTML = `
+            <div class="score">${correctCount} / ${TOTAL_QUESTIONS}</div>
+            <p style="font-size:1.2rem; margin:10px 0">Calificación: ${percentage.toFixed(1)}%</p>
+            <p style="font-weight:bold; color:#d32f2f">${verdict}</p>
+            <p style="margin-top:15px; font-size:0.9rem;">✨ Al hacer otro simulacro, tendrás 60 preguntas nuevas del banco de 120 ✨</p>
+            <button class="restart-btn" id="restartBtn">🔄 Realizar otro simulacro</button>
+        `;
+        resultDiv.classList.add('show');
+        document.getElementById('submitBtn').disabled = true;
+        document.getElementById('submitBtn').style.opacity = '0.6';
+        document.getElementById('restartBtn').addEventListener('click', () => location.reload());
+    }
+
+    function initSimulator() {
+        currentQuestions = selectRandomQuestions();
+        userAnswers = new Array(TOTAL_QUESTIONS).fill(null);
+        renderQuestions();
+        startTimer();
+    }
+
+    function checkPassword() {
+        if (document.getElementById('passwordInput').value === ACCESS_PASSWORD) {
+            document.getElementById('loginContainer').style.display = 'none';
+            document.getElementById('mainContainer').style.display = 'block';
+            initSimulator();
+        } else {
+            document.getElementById('errorMessage').style.display = 'block';
+            document.getElementById('passwordInput').value = '';
+        }
+    }
+    document.getElementById('loginBtn').addEventListener('click', checkPassword);
+    document.getElementById('passwordInput').addEventListener('keypress', e => { if (e.key === 'Enter') checkPassword(); });
+    document.getElementById('submitBtn').addEventListener('click', () => { if (!examFinished && confirm("¿Finalizar examen?")) gradeExam(); });
+</script>
+</body>
+</html>

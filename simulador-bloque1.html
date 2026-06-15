@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Simulador EXCOBA - Bloque 1 (Semanas 1-4) | KUNA Academia</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #0f2b4d, #1e3c72);
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+        .header h1 { font-size: 1.8rem; margin-bottom: 10px; }
+        .header p { opacity: 0.9; font-size: 0.95rem; }
+        .stats-bar {
+            background: #ff6b35;
+            color: white;
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+            font-weight: bold;
+        }
+        .timer-section, .question-counter {
+            background: rgba(0,0,0,0.2);
+            padding: 5px 15px;
+            border-radius: 30px;
+        }
+        .timer-section.warning {
+            background: #d32f2f;
+            animation: pulse 1s infinite;
+        }
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+        .quiz-body { padding: 30px; max-height: 60vh; overflow-y: auto; }
+        .question-card {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 25px;
+            border-left: 5px solid #ff6b35;
+        }
+        .question-text { font-size: 1rem; font-weight: 600; margin-bottom: 15px; color: #1e3c72; }
+        .question-tag {
+            display: inline-block;
+            background: #e9ecef;
+            padding: 3px 10px;
+            border-radius: 15px;
+            font-size: 0.7rem;
+            margin-bottom: 10px;
+            color: #495057;
+        }
+        .options { list-style: none; padding-left: 0; }
+        .options li {
+            margin: 12px 0;
+            padding: 12px 15px;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .options li:hover { background: #e9ecef; transform: translateX(5px); }
+        .options li.selected {
+            background: #d1e7ff;
+            border-color: #ff6b35;
+            border-left: 4px solid #ff6b35;
+        }
+        .btn-submit {
+            background: #ff6b35;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            border-radius: 40px;
+            cursor: pointer;
+            width: 100%;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+        .btn-submit:hover { background: #e55a2b; }
+        .btn-submit:disabled { background: #ccc; cursor: not-allowed; }
+        .results {
+            background: #e8f5e9;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+            text-align: center;
+            display: none;
+        }
+        .results.show { display: block; animation: fadeIn 0.5s; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px);}
+            to { opacity: 1; transform: translateY(0);}
+        }
+        .score { font-size: 2.5rem; font-weight: bold; color: #2e7d32; }
+        .restart-btn {
+            background: #1e3c72;
+            margin-top: 15px;
+            display: inline-block;
+            padding: 10px 25px;
+            border-radius: 30px;
+            color: white;
+            cursor: pointer;
+            border: none;
+        }
+        footer {
+            text-align: center;
+            padding: 15px;
+            background: #f1f3f5;
+            font-size: 0.8rem;
+            color: #6c757d;
+        }
+        @media (max-width: 768px) {
+            .quiz-body { padding: 20px; }
+            .question-text { font-size: 0.9rem; }
+            .stats-bar { flex-direction: column; text-align: center; }
+        }
+        .progress-bar-container {
+            background: #e0e0e0;
+            border-radius: 10px;
+            margin: 15px 0;
+            height: 8px;
+        }
+        .progress-bar {
+            background: #ff6b35;
+            border-radius: 10px;
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s;
+        }
+        .login-container {
+            max-width: 450px;
+            width: 100%;
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            animation: fadeIn 0.5s;
+        }
+        .login-header {
+            background: linear-gradient(135deg, #0f2b4d, #1e3c72);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        .login-body { padding: 30px; }
+        .login-body input {
+            width: 100%;
+            padding: 15px;
+            font-size: 1rem;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        .login-body input:focus { outline: none; border-color: #ff6b35; }
+        .login-body button {
+            width: 100%;
+            background: #ff6b35;
+            color: white;
+            border: none;
+            padding: 15px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 40px;
+            cursor: pointer;
+        }
+        .error-message {
+            background: #ffebee;
+            color: #d32f2f;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+<div id="loginContainer" class="login-container" style="margin: 0 auto;">
+    <div class="login-header">
+        <h1>🔐 Acceso Restringido</h1>
+        <p>Simulador EXCOBA - Bloque 1 (Semanas 1-4)</p>
+    </div>
+    <div class="login-body">
+        <div class="error-message" id="errorMessage">❌ Contraseña incorrecta. Intenta de nuevo.</div>
+        <input type="password" id="passwordInput" placeholder="Ingresa la contraseña" autocomplete="off">
+        <button id="loginBtn">Acceder al Simulador</button>
+        <p style="margin-top: 15px; font-size: 0.8rem; color: #666; text-align: center;">⚠️ Contraseña proporcionada por tu instructor</p>
+    </div>
+</div>
+
+<div class="container" id="mainContainer" style="display: none;">
+    <div class="header">
+        <h1>📘 Simulador EXCOBA - Bloque 1</h1>
+        <p>Semanas 1-4: Aritmética, Álgebra, Ecuaciones y Geometría | 25 preguntas | 25 minutos</p>
+    </div>
+    <div class="stats-bar">
+        <div class="timer-section" id="timerDisplay">⏱️ Tiempo: 00:25:00</div>
+        <div class="question-counter" id="counterDisplay">📋 Respondidas: 0 de 25</div>
+    </div>
+    <div class="quiz-body" id="quizBody">
+        <div id="questionsContainer"></div>
+        <button class="btn-submit" id="submitBtn">✅ Finalizar y calificar</button>
+        <div id="results" class="results"></div>
+    </div>
+    <div class="progress-bar-container">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+    <footer>Simulador EXCOBA - Bloque 1 | Banco de 50 preguntas | 25 preguntas aleatorias por intento</footer>
+</div>
+
+<script>
+    const ACCESS_PASSWORD = "EXCOBA2026";
+    
+    // Banco de 50 preguntas (Semanas 1-4)
+    const questionBank = [
+        // Aritmética (12)
+        { text: "¿Resultado de 12 ÷ 3 × 2 + 4?", options: ["4", "8", "10", "12"], correct: 3, tema: "Aritmética" },
+        { text: "Simplifica: (3⁴ × 3²) ÷ 3⁵", options: ["3", "9", "27", "81"], correct: 1, tema: "Aritmética" },
+        { text: "Convierte 90 km/h a m/s", options: ["15 m/s", "20 m/s", "25 m/s", "30 m/s"], correct: 2, tema: "Conversión" },
+        { text: "Resuelve: (2 + 3)² - 4 × 2", options: ["17", "25", "5", "9"], correct: 0, tema: "Aritmética" },
+        { text: "¿Cuánto es 2⁵?", options: ["10", "25", "32", "16"], correct: 2, tema: "Aritmética" },
+        { text: "Expresa 0.00072 en notación científica", options: ["7.2×10⁻⁴", "7.2×10⁻³", "7.2×10⁴", "72×10⁻⁵"], correct: 0, tema: "Notación científica" },
+        { text: "Calcula: 5 + 3 × (2³ - 4) ÷ 2", options: ["17", "11", "14", "8"], correct: 1, tema: "Aritmética" },
+        { text: "Simplifica: (2³)² ÷ 2⁴", options: ["2", "4", "8", "16"], correct: 1, tema: "Aritmética" },
+        { text: "Convierte 15 m/s a km/h", options: ["42 km/h", "48 km/h", "54 km/h", "60 km/h"], correct: 2, tema: "Conversión" },
+        { text: "¿Cuánto es ¾ + ⅔?", options: ["5/7", "17/12", "5/12", "6/7"], correct: 1, tema: "Aritmética" },
+        { text: "Convierte 108 km/h a m/s", options: ["25 m/s", "30 m/s", "35 m/s", "40 m/s"], correct: 1, tema: "Conversión" },
+        { text: "¿Cuánto es (2³ × 2²) ÷ 2⁴?", options: ["2", "4", "8", "16"], correct: 0, tema: "Aritmética" },
+        // Álgebra (13)
+        { text: "Simplifica: (4x² + 3x - 2) - (2x² - x + 5)", options: ["2x²+4x-7", "2x²+2x-7", "2x²+4x-3", "6x²+2x+3"], correct: 0, tema: "Álgebra" },
+        { text: "Desarrolla: (3x - 2)²", options: ["9x²-12x+4", "9x²-4", "9x²+12x+4", "3x²-6x+4"], correct: 0, tema: "Álgebra" },
+        { text: "Factoriza: x² - 25", options: ["(x-5)²", "(x-5)(x+5)", "(x+5)²", "x(x-25)"], correct: 1, tema: "Álgebra" },
+        { text: "Multiplica: (2x + 1)(x - 3)", options: ["2x²-5x-3", "2x²-6x-3", "2x²+5x-3", "2x²-5x+3"], correct: 0, tema: "Álgebra" },
+        { text: "Si x = -2, ¿cuánto es 3x² - 2x?", options: ["8", "16", "-8", "-16"], correct: 1, tema: "Álgebra" },
+        { text: "Desarrolla: (x + 4)(x - 4)", options: ["x²-16", "x²+16", "x²-8x+16", "x²-8x-16"], correct: 0, tema: "Álgebra" },
+        { text: "Factoriza: x² + 6x + 9", options: ["(x+3)²", "(x-3)²", "(x+3)(x-3)", "(x+9)(x+1)"], correct: 0, tema: "Álgebra" },
+        { text: "Simplifica: 3(2x - 1) + 4(x + 2)", options: ["10x+5", "10x+7", "6x+5", "6x+7"], correct: 0, tema: "Álgebra" },
+        { text: "Desarrolla: (2x - 3)(x + 2)", options: ["2x²+x-6", "2x²-x-6", "2x²+x+6", "2x²-x+6"], correct: 0, tema: "Álgebra" },
+        { text: "Si x = 3, ¿cuánto es 2x³ - 4x²?", options: ["18", "36", "54", "12"], correct: 0, tema: "Álgebra" },
+        { text: "Factoriza: 4x² - 9", options: ["(2x-3)(2x+3)", "(4x-3)(x+3)", "(2x-3)²", "(2x+3)²"], correct: 0, tema: "Álgebra" },
+        { text: "Simplifica: (x² + 3x) ÷ x", options: ["x+3", "x²+3", "x+3x", "x²+3x"], correct: 0, tema: "Álgebra" },
+        { text: "Factoriza: x² - 11x + 28", options: ["(x-4)(x-7)", "(x+4)(x+7)", "(x-4)(x+7)", "(x+4)(x-7)"], correct: 0, tema: "Álgebra" },
+        // Ecuaciones (13)
+        { text: "Resuelve: 4x - 7 = 21", options: ["5", "7", "9", "11"], correct: 1, tema: "Ecuaciones" },
+        { text: "Resuelve: 3x + 5 = 2x + 12", options: ["5", "6", "7", "8"], correct: 2, tema: "Ecuaciones" },
+        { text: "Resuelve sistema: x + y = 12, x - y = 2", options: ["x=7,y=5", "x=6,y=4", "x=7,y=4", "x=8,y=4"], correct: 0, tema: "Sistemas" },
+        { text: "Resuelve: x/2 + 3 = 7", options: ["4", "6", "8", "10"], correct: 2, tema: "Ecuaciones" },
+        { text: "Resuelve sistema: 2x + y = 10, x - y = 2", options: ["x=4,y=2", "x=3,y=4", "x=4,y=6", "x=6,y=4"], correct: 0, tema: "Sistemas" },
+        { text: "Resuelve: 5(x - 2) = 3(x + 4)", options: ["9", "10", "11", "12"], correct: 2, tema: "Ecuaciones" },
+        { text: "Resuelve sistema: 3x + 2y = 16, x - y = 2", options: ["x=4,y=2", "x=5,y=3", "x=4,y=3", "x=3,y=2"], correct: 0, tema: "Sistemas" },
+        { text: "Resuelve: 2(3x - 1) = 4x + 10", options: ["6", "7", "8", "9"], correct: 0, tema: "Ecuaciones" },
+        { text: "Resuelve sistema: 4x - y = 5, 2x + 3y = 13", options: ["x=2,y=3", "x=3,y=2", "x=1,y=5", "x=3,y=4"], correct: 0, tema: "Sistemas" },
+        { text: "Resuelve: (2x - 1)/3 = 5", options: ["7", "8", "9", "10"], correct: 1, tema: "Ecuaciones" },
+        { text: "Resuelve: 7x - 3 = 4x + 12", options: ["3", "5", "7", "9"], correct: 1, tema: "Ecuaciones" },
+        { text: "Resuelve sistema: x + 2y = 8, 2x - y = 1", options: ["x=2,y=3", "x=3,y=2.5", "x=2.5,y=2.75", "x=2.2,y=2.9"], correct: 0, tema: "Sistemas" },
+        { text: "Resuelve: 6x - 4 = 2x + 8", options: ["2", "3", "4", "5"], correct: 1, tema: "Ecuaciones" },
+        // Geometría (12)
+        { text: "Perímetro de rectángulo de largo 10 cm y ancho 4 cm", options: ["14 cm", "28 cm", "40 cm", "20 cm"], correct: 1, tema: "Geometría" },
+        { text: "Área de círculo de radio 5 cm", options: ["10π cm²", "25π cm²", "5π cm²", "20π cm²"], correct: 1, tema: "Geometría" },
+        { text: "Catetos 6 cm y 8 cm. ¿Hipotenusa?", options: ["10 cm", "12 cm", "14 cm", "9 cm"], correct: 0, tema: "Pitágoras" },
+        { text: "Área de triángulo con base 10 cm y altura 6 cm", options: ["60 cm²", "30 cm²", "20 cm²", "15 cm²"], correct: 1, tema: "Geometría" },
+        { text: "Escalera de 13 m apoyada a 5 m de la pared. ¿Altura?", options: ["10 m", "11 m", "12 m", "13 m"], correct: 2, tema: "Pitágoras" },
+        { text: "Perímetro de cuadrado de lado 7 cm", options: ["49 cm", "14 cm", "28 cm", "21 cm"], correct: 2, tema: "Geometría" },
+        { text: "Hipotenusa 15 cm, cateto 9 cm. ¿Otro cateto?", options: ["10 cm", "12 cm", "13 cm", "14 cm"], correct: 1, tema: "Pitágoras" },
+        { text: "Área de cuadrado de lado 9 cm", options: ["81 cm²", "36 cm²", "18 cm²", "72 cm²"], correct: 0, tema: "Geometría" },
+        { text: "Rectángulo área 48 cm², ancho 6 cm. ¿Largo?", options: ["6 cm", "7 cm", "8 cm", "9 cm"], correct: 2, tema: "Geometría" },
+        { text: "Circunferencia de círculo de radio 7 cm (π≈3.14)", options: ["21.98 cm", "43.96 cm", "14 cm", "28 cm"], correct: 1, tema: "Geometría" },
+        { text: "Área de círculo de diámetro 10 cm", options: ["25π cm²", "100π cm²", "10π cm²", "50π cm²"], correct: 0, tema: "Geometría" },
+        { text: "Catetos 5 cm y 12 cm. ¿Hipotenusa?", options: ["10 cm", "11 cm", "13 cm", "14 cm"], correct: 2, tema: "Pitágoras" }
+    ];
+
+    const TOTAL_QUESTIONS = 25;
+    const TIME_LIMIT_MIN = 25;
+    
+    let currentQuestions = [];
+    let userAnswers = new Array(TOTAL_QUESTIONS).fill(null);
+    let timer;
+    let timeLeft = TIME_LIMIT_MIN * 60;
+    let examFinished = false;
+
+    function shuffleArray(arr) {
+        for (let i = arr.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        return arr;
+    }
+
+    function selectRandomQuestions() {
+        const shuffledBank = shuffleArray([...questionBank]);
+        return shuffledBank.slice(0, TOTAL_QUESTIONS);
+    }
+
+    function renderQuestions() {
+        const container = document.getElementById('questionsContainer');
+        container.innerHTML = '';
+        currentQuestions.forEach((q, idx) => {
+            const card = document.createElement('div');
+            card.className = 'question-card';
+            card.innerHTML = `
+                <div class="question-tag">📚 ${q.tema}</div>
+                <div class="question-text">${idx+1}. ${q.text}</div>
+                <ul class="options" data-qidx="${idx}">
+                    ${q.options.map((opt, optIdx) => `<li data-optidx="${optIdx}">${String.fromCharCode(65+optIdx)}. ${opt}</li>`).join('')}
+                </ul>
+            `;
+            container.appendChild(card);
+        });
+        document.querySelectorAll('.options').forEach(optContainer => {
+            const qIdx = parseInt(optContainer.dataset.qidx);
+            optContainer.querySelectorAll('li').forEach(li => {
+                const optIdx = parseInt(li.dataset.optidx);
+                li.addEventListener('click', () => {
+                    if (examFinished) return;
+                    optContainer.querySelectorAll('li').forEach(l => l.classList.remove('selected'));
+                    li.classList.add('selected');
+                    userAnswers[qIdx] = optIdx;
+                    updateCounterAndProgress();
+                });
+                if (userAnswers[qIdx] === optIdx) li.classList.add('selected');
+            });
+        });
+        updateCounterAndProgress();
+    }
+
+    function updateCounterAndProgress() {
+        const answered = userAnswers.filter(a => a !== null).length;
+        document.getElementById('counterDisplay').innerHTML = `📋 Respondidas: ${answered} de ${TOTAL_QUESTIONS}`;
+        const progressPercent = (answered / TOTAL_QUESTIONS) * 100;
+        document.getElementById('progressBar').style.width = `${progressPercent}%`;
+    }
+
+    function formatTime(seconds) {
+        const minutes = Math.floor(seconds / 60);
+        const secs = seconds % 60;
+        return `${minutes.toString().padStart(2,'0')}:${secs.toString().padStart(2,'0')}`;
+    }
+
+    function updateTimerDisplay() {
+        const timerElement = document.getElementById('timerDisplay');
+        timerElement.innerHTML = `⏱️ Tiempo: ${formatTime(timeLeft)}`;
+        if (timeLeft <= 300 && timeLeft > 0) timerElement.classList.add('warning');
+        else timerElement.classList.remove('warning');
+        if (timeLeft <= 0 && !examFinished) {
+            clearInterval(timer);
+            examFinished = true;
+            alert("⏰ Tiempo agotado. El examen se calificará automáticamente.");
+            gradeExam();
+        }
+    }
+
+    function startTimer() {
+        timer = setInterval(() => {
+            if (timeLeft > 0 && !examFinished) {
+                timeLeft--;
+                updateTimerDisplay();
+            } else if (timeLeft <= 0 && !examFinished) {
+                clearInterval(timer);
+                examFinished = true;
+                gradeExam();
+            }
+        }, 1000);
+    }
+
+    function gradeExam() {
+        if (examFinished) return;
+        examFinished = true;
+        clearInterval(timer);
+        let correctCount = 0;
+        currentQuestions.forEach((q, idx) => {
+            if (userAnswers[idx] !== null && userAnswers[idx] === q.correct) correctCount++;
+        });
+        const percentage = (correctCount / TOTAL_QUESTIONS) * 100;
+        const resultDiv = document.getElementById('results');
+        let verdict = percentage >= 70 ? '🎉 ¡APROBADO! Sólido conocimiento.' : (percentage >= 50 ? '📚 Cerca, necesitas repasar más.' : '⚠️ No alcanzaste el puntaje. Sigue practicando.');
+        resultDiv.innerHTML = `
+            <div class="score">${correctCount} / ${TOTAL_QUESTIONS}</div>
+            <p style="font-size:1.2rem; margin:10px 0">Calificación: ${percentage.toFixed(1)}%</p>
+            <p style="font-weight:bold; color:#d32f2f">${verdict}</p>
+            <p style="margin-top:15px; font-size:0.9rem;">✨ Al hacer otro simulacro, tendrás 25 preguntas nuevas ✨</p>
+            <button class="restart-btn" id="restartBtn">🔄 Realizar otro simulacro</button>
+        `;
+        resultDiv.classList.add('show');
+        document.getElementById('submitBtn').disabled = true;
+        document.getElementById('submitBtn').style.opacity = '0.6';
+        document.getElementById('restartBtn').addEventListener('click', () => location.reload());
+    }
+
+    function initSimulator() {
+        currentQuestions = selectRandomQuestions();
+        userAnswers = new Array(TOTAL_QUESTIONS).fill(null);
+        renderQuestions();
+        startTimer();
+    }
+
+    // Login
+    function checkPassword() {
+        if (document.getElementById('passwordInput').value === ACCESS_PASSWORD) {
+            document.getElementById('loginContainer').style.display = 'none';
+            document.getElementById('mainContainer').style.display = 'block';
+            initSimulator();
+        } else {
+            document.getElementById('errorMessage').style.display = 'block';
+            document.getElementById('passwordInput').value = '';
+        }
+    }
+    document.getElementById('loginBtn').addEventListener('click', checkPassword);
+    document.getElementById('passwordInput').addEventListener('keypress', e => { if (e.key === 'Enter') checkPassword(); });
+    document.getElementById('submitBtn').addEventListener('click', () => { if (!examFinished && confirm("¿Finalizar examen?")) gradeExam(); });
+</script>
+</body>
+</html>
