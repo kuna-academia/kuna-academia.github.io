@@ -233,7 +233,7 @@
 
     <script>
         // ============================================
-        // CONTENIDO DE LOS CURSOS CON DIAGNÓSTICOS Y SIMULADORES
+        // CONTENIDO DE LOS CURSOS
         // ============================================
         const contenidoPorCurso = {
             "EXCOBA": {
@@ -269,14 +269,14 @@
                 simuladores: [],
                 semanas: [
                     { 
-    nombre: "Semana 1: Números y operaciones", 
-    recursos: [
-        { tipo: "html", titulo: "📖 Ver contenido completo", url: "secundaria-semana1.html" },
-        { tipo: "video", titulo: "📹 Video", url: "https://youtu.be/tu-video" },
-        { tipo: "form", titulo: "📝 Cuestionario básico", url: "https://forms.gle/tu-formulario-1" },
-        { tipo: "form", titulo: "📝 Cuestionario tipo examen", url: "https://forms.gle/tu-formulario-2" }
-    ]
-}
+                        nombre: "Semana 1: Números y operaciones", 
+                        recursos: [
+                            { tipo: "html", titulo: "📖 Ver contenido completo", url: "secundaria-semana1.html" },
+                            { tipo: "video", titulo: "📹 Video explicativo", url: "https://youtu.be/TU-VIDEO-AQUI" },
+                            { tipo: "form", titulo: "📝 Cuestionario básico", url: "https://forms.gle/TU-FORMULARIO-1" },
+                            { tipo: "form", titulo: "📝 Cuestionario tipo examen", url: "https://forms.gle/TU-FORMULARIO-2" }
+                        ]
+                    },
                     { nombre: "Semana 2: Proporcionalidad", recursos: [] },
                     { nombre: "Semana 3: Álgebra básica", recursos: [] },
                     { nombre: "Semana 4: Geometría plana", recursos: [] },
@@ -319,7 +319,7 @@
                 if (curso.diagnosticos && curso.diagnosticos.length > 0) {
                     html += `<div class="card-material card-diagnostico" style="margin-bottom: 30px;">
                         <h3>📝 Diagnostic Tests</h3>
-                        <p style="color: #555; margin-bottom: 15px;">Complete these tests before starting the course to identify your strengths and areas for improvement.</p>`;
+                        <p style="color: #555; margin-bottom: 15px;">Complete these tests before starting the course.</p>`;
                     curso.diagnosticos.forEach(diag => {
                         html += `
                             <div class="recurso recurso-diagnostico">
@@ -350,12 +350,16 @@
                 html += `<div class="secciones">`;
                 curso.semanas.forEach((semana, idx) => {
                     const completadas = obtenerCompletadas(alumno.username);
-                    const semanaCompletada = completadas[`semana_${idx}`] || false;
                     
                     html += `
                         <div class="card-material">
                             <h3>${semana.nombre}</h3>
-                            ${semana.recursos.length === 0 ? '<p>📌 Material disponible próximamente</p>' : ''}
+                            ${semana.recursos && semana.recursos.length > 0 ? semana.recursos.map(recurso => `
+                                <div class="recurso">
+                                    <span>${recurso.titulo}</span>
+                                    <a href="${recurso.url}" target="_blank">${recurso.tipo === 'html' ? 'Abrir →' : 'Ver →'}</a>
+                                </div>
+                            `).join('') : '<p>📌 Material disponible próximamente</p>'}
                         </div>
                     `;
                 });
@@ -379,7 +383,7 @@
             let completados = 0;
             
             curso.semanas.forEach((semana, idx) => {
-                if (semana.recursos.length > 0) {
+                if (semana.recursos && semana.recursos.length > 0) {
                     totalRecursos += semana.recursos.length;
                     semana.recursos.forEach((recurso, ridx) => {
                         if (completadas[`recurso_${idx}_${ridx}`]) completados++;
