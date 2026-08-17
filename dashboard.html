@@ -126,6 +126,11 @@
             margin-bottom: 15px;
         }
 
+        .card-diagnostico {
+            border-left-color: #2f5f4a;
+            background: #f0f7f0;
+        }
+
         .recurso {
             padding: 12px;
             background-color: #f8f9fa;
@@ -146,15 +151,13 @@
             text-decoration: underline;
         }
 
-        .completado {
-            color: #2f5f4a;
-            font-weight: bold;
+        .recurso-diagnostico {
+            background-color: #e8f5e9;
         }
 
-        input[type="checkbox"] {
-            margin-right: 10px;
-            transform: scale(1.2);
-            cursor: pointer;
+        .recurso-diagnostico a {
+            color: #2f5f4a;
+            font-weight: 600;
         }
 
         .simulador-link {
@@ -230,11 +233,12 @@
 
     <script>
         // ============================================
-        // CONTENIDO DE LOS CURSOS CON SIMULADORES
+        // CONTENIDO DE LOS CURSOS CON DIAGNÓSTICOS Y SIMULADORES
         // ============================================
         const contenidoPorCurso = {
             "EXCOBA": {
                 titulo: "Curso EXCOBA - Física y Matemáticas",
+                diagnosticos: [],
                 simuladores: [
                     { nombre: "Simulador Bloque 1 (Semanas 1-4)", url: "simulador-bloque1.html", icono: "📘" },
                     { nombre: "Simulador Bloque 2 (Semanas 5-8)", url: "simulador-bloque2.html", icono: "📘" },
@@ -258,6 +262,10 @@
             },
             "Secundaria": {
                 titulo: "Curso Secundaria - Matemáticas",
+                diagnosticos: [
+                    { nombre: "📝 Diagnostic Test - Primary (1st-5th Grade)", url: "diagnostico-primaria.html", icono: "📝" },
+                    { nombre: "📝 Diagnostic Test - Secondary (1st-7th Grade)", url: "diagnostico-secundaria.html", icono: "📝" }
+                ],
                 simuladores: [],
                 semanas: [
                     { nombre: "Semana 1: Números y operaciones", recursos: [] },
@@ -299,7 +307,23 @@
             if (curso) {
                 let html = `<h2>📚 ${curso.titulo}</h2>`;
                 
-                // Sección de simuladores (si tiene)
+                // ===== SECCIÓN DE DIAGNÓSTICOS =====
+                if (curso.diagnosticos && curso.diagnosticos.length > 0) {
+                    html += `<div class="card-material card-diagnostico" style="margin-bottom: 30px;">
+                        <h3>📝 Diagnostic Tests</h3>
+                        <p style="color: #555; margin-bottom: 15px;">Complete these tests before starting the course to identify your strengths and areas for improvement.</p>`;
+                    curso.diagnosticos.forEach(diag => {
+                        html += `
+                            <div class="recurso recurso-diagnostico">
+                                <span>${diag.icono || '📝'} ${diag.nombre}</span>
+                                <a href="${diag.url}" target="_blank">Start →</a>
+                            </div>
+                        `;
+                    });
+                    html += `</div>`;
+                }
+                
+                // ===== SECCIÓN DE SIMULADORES =====
                 if (curso.simuladores && curso.simuladores.length > 0) {
                     html += `<div class="card-material" style="margin-bottom: 30px;">
                         <h3>🎯 Simuladores de examen</h3>`;
@@ -314,7 +338,7 @@
                     html += `</div>`;
                 }
                 
-                // Sección de semanas
+                // ===== SECCIÓN DE SEMANAS =====
                 html += `<div class="secciones">`;
                 curso.semanas.forEach((semana, idx) => {
                     const completadas = obtenerCompletadas(alumno.username);
