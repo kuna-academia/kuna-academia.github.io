@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Semana 1: Números y operaciones | KUNA Academia</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+    
+    <!-- ===== MATHJAX para fórmulas matemáticas ===== -->
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
     <style>
         * {
             margin: 0;
@@ -16,7 +20,7 @@
             font-family: 'Poppins', sans-serif;
             background-color: #f8f9fa;
             color: #333;
-            line-height: 1.6;
+            line-height: 1.8;
         }
 
         h1, h2, h3, h4 {
@@ -170,6 +174,7 @@
             text-align: center;
             margin: 20px 0;
             font-size: 1.3rem;
+            font-family: 'Times New Roman', serif;
         }
 
         .video-container {
@@ -272,8 +277,14 @@
         .ejercicio-item .solucion {
             color: #2f5f4a;
             font-weight: 600;
-            cursor: pointer;
             display: none;
+            margin-top: 10px;
+            width: 100%;
+            background: #e8f5e9;
+            padding: 10px;
+            border-radius: 8px;
+            font-family: 'Times New Roman', serif;
+            font-size: 1.1rem;
         }
 
         .ejercicio-item .solucion.mostrar {
@@ -318,6 +329,11 @@
             }
             .recursos-grid {
                 grid-template-columns: 1fr;
+            }
+            .ejercicio-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
             }
         }
     </style>
@@ -448,31 +464,31 @@
                 <span><strong>1.</strong> \( 12 \div 3 \times 2 + 4 \)</span>
                 <button class="btn-solucion" onclick="mostrarSolucion(1)">Ver solución</button>
             </div>
-            <div id="solucion1" class="solucion">✅ Solución: 12</div>
+            <div id="solucion1" class="solucion">Solución: \( 12 \div 3 \times 2 + 4 = 4 \times 2 + 4 = 8 + 4 = 12 \)</div>
 
             <div class="ejercicio-item">
                 <span><strong>2.</strong> \( \frac{3}{4} + \frac{2}{3} - \frac{1}{2} \)</span>
                 <button class="btn-solucion" onclick="mostrarSolucion(2)">Ver solución</button>
             </div>
-            <div id="solucion2" class="solucion">✅ Solución: \( \frac{11}{12} \)</div>
+            <div id="solucion2" class="solucion">Solución: \( \frac{3}{4} + \frac{2}{3} - \frac{1}{2} = \frac{9 + 8 - 6}{12} = \frac{11}{12} \)</div>
 
             <div class="ejercicio-item">
                 <span><strong>3.</strong> \( \frac{2}{5} \times \frac{10}{3} \)</span>
                 <button class="btn-solucion" onclick="mostrarSolucion(3)">Ver solución</button>
             </div>
-            <div id="solucion3" class="solucion">✅ Solución: \( \frac{4}{3} \)</div>
+            <div id="solucion3" class="solucion">Solución: \( \frac{2}{5} \times \frac{10}{3} = \frac{20}{15} = \frac{4}{3} \)</div>
 
             <div class="ejercicio-item">
                 <span><strong>4.</strong> ¿Qué porcentaje es 30 de 120?</span>
                 <button class="btn-solucion" onclick="mostrarSolucion(4)">Ver solución</button>
             </div>
-            <div id="solucion4" class="solucion">✅ Solución: 25%</div>
+            <div id="solucion4" class="solucion">Solución: \( \frac{30}{120} \times 100 = 25\% \)</div>
 
             <div class="ejercicio-item">
                 <span><strong>5.</strong> $450 con 20% de descuento, ¿cuánto pagas?</span>
                 <button class="btn-solucion" onclick="mostrarSolucion(5)">Ver solución</button>
             </div>
-            <div id="solucion5" class="solucion">✅ Solución: $360</div>
+            <div id="solucion5" class="solucion">Solución: \( 450 \times 0.80 = 360 \)</div>
         </div>
 
         <!-- ========== SECCIÓN: CUESTIONARIOS ========== -->
