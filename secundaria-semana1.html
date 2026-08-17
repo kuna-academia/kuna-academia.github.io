@@ -210,6 +210,29 @@
             border: none;
         }
 
+        .audio-container {
+            margin: 15px 0;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border: 1px solid #ddd;
+        }
+
+        .audio-container audio {
+            width: 100%;
+            border-radius: 30px;
+        }
+
+        .media-label {
+            display: inline-block;
+            background: #182a47;
+            color: white;
+            padding: 2px 12px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            margin-bottom: 10px;
+        }
+
         .recursos-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -327,6 +350,38 @@
             font-size: 1.1rem;
         }
 
+        .simulador-container {
+            background: #e8f5e9;
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 2px solid #2f5f4a;
+            text-align: center;
+        }
+
+        .simulador-container h2 {
+            color: #182a47;
+            margin-bottom: 15px;
+        }
+
+        .simulador-container .btn-simulador {
+            display: inline-block;
+            background-color: #2f5f4a;
+            color: white;
+            padding: 15px 40px;
+            border-radius: 40px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+            margin-top: 10px;
+        }
+
+        .simulador-container .btn-simulador:hover {
+            background-color: #e25e00;
+            transform: scale(1.02);
+        }
+
         footer {
             background-color: #0f1f33;
             color: #8899aa;
@@ -386,21 +441,23 @@
             <span class="badge">📅 Lunes a Viernes</span>
         </div>
 
-        <!-- ========== SECCIÓN: VIDEO ========== -->
+        <!-- ========== SECCIÓN 1: JERARQUÍA DE OPERACIONES ========== -->
         <div class="seccion-teoria">
-            <h2>📹 Video explicativo</h2>
-            <p>Mira este video para introducirte a los temas de la semana. Toma notas mientras lo ves.</p>
+            <h2>1. Jerarquía de operaciones (PEMDAS)</h2>
+
+            <div class="media-label">📹 Video</div>
             <div class="video-container">
-                <iframe src="https://www.youtube.com/embed/TU-VIDEO-AQUI" allowfullscreen></iframe>
+                <iframe src="https://www.youtube.com/embed/TU-VIDEO-PEMDAS" allowfullscreen></iframe>
             </div>
-            <p style="font-size: 0.9rem; color: #666;">⏱️ Duración: ~15 minutos. Pon el video en pausa para tomar notas.</p>
-        </div>
 
-        <!-- ========== SECCIÓN: TEORÍA ========== -->
-        <div class="seccion-teoria">
-            <h2>📖 Teoría y conceptos clave</h2>
+            <div class="media-label">🎧 Audio</div>
+            <div class="audio-container">
+                <audio controls>
+                    <source src="TU-AUDIO-PEMDAS.mp3" type="audio/mpeg">
+                    Tu navegador no soporta el elemento de audio.
+                </audio>
+            </div>
 
-            <h3>1. Jerarquía de operaciones (PEMDAS)</h3>
             <p>Para resolver operaciones matemáticas correctamente, debemos seguir un orden específico:</p>
             <ol>
                 <li><strong>P</strong>aréntesis: resuelve lo que está dentro de los paréntesis primero.</li>
@@ -418,8 +475,25 @@
                 <p><strong>Paso 4:</strong> Suma y resta: $8 + 8 - 3 = 13$</p>
                 <p><strong>Resultado:</strong> <span style="color: #e25e00; font-weight: 700;">13</span></p>
             </div>
+        </div>
 
-            <h3>2. Fracciones</h3>
+        <!-- ========== SECCIÓN 2: FRACCIONES ========== -->
+        <div class="seccion-teoria">
+            <h2>2. Fracciones</h2>
+
+            <div class="media-label">📹 Video</div>
+            <div class="video-container">
+                <iframe src="https://www.youtube.com/embed/TU-VIDEO-FRACCIONES" allowfullscreen></iframe>
+            </div>
+
+            <div class="media-label">🎧 Audio</div>
+            <div class="audio-container">
+                <audio controls>
+                    <source src="TU-AUDIO-FRACCIONES.mp3" type="audio/mpeg">
+                    Tu navegador no soporta el elemento de audio.
+                </audio>
+            </div>
+
             <p>Una fracción representa una parte de un todo. Tiene un <strong>numerador</strong> (parte de arriba) y un <strong>denominador</strong> (parte de abajo).</p>
 
             <div class="formula-box">
@@ -443,8 +517,25 @@
             <div class="formula-box">
                 División: $$ \frac{a}{b} \div \frac{c}{d} = \frac{a}{b} \times \frac{d}{c} = \frac{ad}{bc} $$
             </div>
+        </div>
 
-            <h3>3. Decimales</h3>
+        <!-- ========== SECCIÓN 3: DECIMALES ========== -->
+        <div class="seccion-teoria">
+            <h2>3. Decimales</h2>
+
+            <div class="media-label">📹 Video</div>
+            <div class="video-container">
+                <iframe src="https://www.youtube.com/embed/TU-VIDEO-DECIMALES" allowfullscreen></iframe>
+            </div>
+
+            <div class="media-label">🎧 Audio</div>
+            <div class="audio-container">
+                <audio controls>
+                    <source src="TU-AUDIO-DECIMALES.mp3" type="audio/mpeg">
+                    Tu navegador no soporta el elemento de audio.
+                </audio>
+            </div>
+
             <p>Los decimales son fracciones con denominador de 10, 100, 1000, etc.</p>
             <div class="ejemplo-box">
                 <strong>💡 Ejemplos:</strong>
@@ -452,8 +543,25 @@
                 <p>$0.25 = \frac{25}{100} = \frac{1}{4}$</p>
                 <p>$0.75 = \frac{75}{100} = \frac{3}{4}$</p>
             </div>
+        </div>
 
-            <h3>4. Porcentajes</h3>
+        <!-- ========== SECCIÓN 4: PORCENTAJES ========== -->
+        <div class="seccion-teoria">
+            <h2>4. Porcentajes</h2>
+
+            <div class="media-label">📹 Video</div>
+            <div class="video-container">
+                <iframe src="https://www.youtube.com/embed/TU-VIDEO-PORCENTAJES" allowfullscreen></iframe>
+            </div>
+
+            <div class="media-label">🎧 Audio</div>
+            <div class="audio-container">
+                <audio controls>
+                    <source src="TU-AUDIO-PORCENTAJES.mp3" type="audio/mpeg">
+                    Tu navegador no soporta el elemento de audio.
+                </audio>
+            </div>
+
             <p>Un porcentaje es una fracción con denominador 100.</p>
             <div class="formula-box">
                 $$ \text{Porcentaje} = \frac{\text{Parte}}{\text{Total}} \times 100 $$
@@ -479,10 +587,10 @@
             </div>
         </div>
 
-        <!-- ========== SECCIÓN: EJERCICIOS ========== -->
+        <!-- ========== EJERCICIOS DE PRÁCTICA ========== -->
         <div class="ejercicios-practica">
             <h2>✏️ Ejercicios de práctica</h2>
-            <p>Resuelve estos ejercicios para practicar. Puedes ver las soluciones al final.</p>
+            <p>Resuelve estos ejercicios para practicar. Haz clic en el botón para ver la solución.</p>
 
             <div class="ejercicio-item">
                 <span><strong>1.</strong> $12 \div 3 \times 2 + 4$</span>
@@ -515,25 +623,19 @@
             <div id="solucion5" class="solucion">Solución: $450 \times 0.80 = 360$</div>
         </div>
 
-        <!-- ========== SECCIÓN: CUESTIONARIOS ========== -->
-        <div class="seccion-teoria">
-            <h2>📝 Cuestionarios de práctica</h2>
-            <p>Ahora que has revisado la teoría y practicado, es momento de poner a prueba tus conocimientos.</p>
+        <!-- ========== CUESTIONARIOS COMO SIMULADORES ========== -->
+        <div class="simulador-container">
+            <h2>📝 Cuestionario básico</h2>
+            <p>Ejercicios sencillos para repasar los conceptos de la Semana 1.</p>
+            <p style="font-size: 0.9rem; color: #555;">10 preguntas · 15 minutos · Simulador interactivo</p>
+            <a href="simulador-semana1-basico.html" class="btn-simulador">🎯 Comenzar simulador →</a>
+        </div>
 
-            <div class="recursos-grid">
-                <div class="recurso-card">
-                    <div class="icono">📝</div>
-                    <h4>Cuestionario básico</h4>
-                    <p>Ejercicios sencillos para repasar los conceptos</p>
-                    <a href="https://forms.gle/TU-FORMULARIO-1" target="_blank">Comenzar →</a>
-                </div>
-                <div class="recurso-card">
-                    <div class="icono">📊</div>
-                    <h4>Cuestionario tipo examen</h4>
-                    <p>Problemas similares al examen real</p>
-                    <a href="https://forms.gle/TU-FORMULARIO-2" target="_blank" class="secundario">Comenzar →</a>
-                </div>
-            </div>
+        <div class="simulador-container">
+            <h2>📊 Cuestionario tipo examen</h2>
+            <p>Problemas similares al examen real de secundaria.</p>
+            <p style="font-size: 0.9rem; color: #555;">10 preguntas · 20 minutos · Simulador interactivo</p>
+            <a href="simulador-semana1-examen.html" class="btn-simulador" style="background-color: #e25e00;">🎯 Comenzar simulador →</a>
         </div>
 
     </div>
@@ -548,6 +650,7 @@
     <script>
         function mostrarSolucion(numero) {
             const solucion = document.getElementById('solucion' + numero);
+            // Alternar la clase 'mostrar'
             if (solucion.classList.contains('mostrar')) {
                 solucion.classList.remove('mostrar');
             } else {
