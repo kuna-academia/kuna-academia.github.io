@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Diagnostic Test - Primary (1st-5th Grade) | KUNA Academia</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #0f2b4d, #1e3c72);
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+        .header h1 { font-size: 1.8rem; margin-bottom: 10px; }
+        .header p { opacity: 0.9; font-size: 0.95rem; }
+        .stats-bar {
+            background: #ff6b35;
+            color: white;
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+            font-weight: bold;
+        }
+        .timer-section, .question-counter {
+            background: rgba(0,0,0,0.2);
+            padding: 5px 15px;
+            border-radius: 30px;
+        }
+        .timer-section.warning {
+            background: #d32f2f;
+            animation: pulse 1s infinite;
+        }
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+        .quiz-body { padding: 30px; max-height: 60vh; overflow-y: auto; }
+        .question-card {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 25px;
+            border-left: 5px solid #ff6b35;
+        }
+        .question-text { font-size: 1rem; font-weight: 600; margin-bottom: 15px; color: #1e3c72; }
+        .question-tag {
+            display: inline-block;
+            background: #e9ecef;
+            padding: 3px 10px;
+            border-radius: 15px;
+            font-size: 0.7rem;
+            margin-bottom: 10px;
+            color: #495057;
+        }
+        .options { list-style: none; padding-left: 0; }
+        .options li {
+            margin: 12px 0;
+            padding: 12px 15px;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .options li:hover { background: #e9ecef; transform: translateX(5px); }
+        .options li.selected {
+            background: #d1e7ff;
+            border-color: #ff6b35;
+            border-left: 4px solid #ff6b35;
+        }
+        .btn-submit {
+            background: #ff6b35;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            border-radius: 40px;
+            cursor: pointer;
+            width: 100%;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+        .btn-submit:hover { background: #e55a2b; }
+        .btn-submit:disabled { background: #ccc; cursor: not-allowed; }
+        .results {
+            background: #e8f5e9;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+            text-align: center;
+            display: none;
+        }
+        .results.show { display: block; animation: fadeIn 0.5s; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px);}
+            to { opacity: 1; transform: translateY(0);}
+        }
+        .score { font-size: 2.5rem; font-weight: bold; color: #2e7d32; }
+        .restart-btn {
+            background: #1e3c72;
+            margin-top: 15px;
+            display: inline-block;
+            padding: 10px 25px;
+            border-radius: 30px;
+            color: white;
+            cursor: pointer;
+            border: none;
+        }
+        footer {
+            text-align: center;
+            padding: 15px;
+            background: #f1f3f5;
+            font-size: 0.8rem;
+            color: #6c757d;
+        }
+        @media (max-width: 768px) {
+            .quiz-body { padding: 20px; }
+            .question-text { font-size: 0.9rem; }
+            .stats-bar { flex-direction: column; text-align: center; }
+        }
+        .progress-bar-container {
+            background: #e0e0e0;
+            border-radius: 10px;
+            margin: 15px 0;
+            height: 8px;
+        }
+        .progress-bar {
+            background: #ff6b35;
+            border-radius: 10px;
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s;
+        }
+        .feedback-container {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .feedback-item {
+            padding: 12px;
+            margin: 8px 0;
+            border-radius: 8px;
+            border-left: 4px solid;
+            text-align: left;
+        }
+        .feedback-correcto { background: #e8f5e9; border-color: #2e7d32; }
+        .feedback-incorrecto { background: #ffebee; border-color: #c62828; }
+        .feedback-no-respondida { background: #fff3e0; border-color: #ef6c00; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>📝 Diagnostic Test - Primary</h1>
+        <p>For students entering 6th Grade · 20 questions · 30 minutes</p>
+    </div>
+    <div class="stats-bar">
+        <div class="timer-section" id="timerDisplay">⏱️ Time: 00:30:00</div>
+        <div class="question-counter" id="counterDisplay">📋 Answered: 0 of 20</div>
+    </div>
+    <div class="quiz-body" id="quizBody">
+        <div id="questionsContainer"></div>
+        <button class="btn-submit" id="submitBtn">✅ Finish and grade</button>
+        <div id="results" class="results"></div>
+    </div>
+    <div class="progress-bar-container">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+    <footer>Diagnostic Test - Primary (1st-5th Grade) | KUNA Academia</footer>
+</div>
+
+<script>
+    // ============================================
+    // DIAGNOSTIC TEST - PRIMARY (1st-5th Grade)
+    // 20 questions, 30 minutes
+    // ============================================
+    const questionBank = [
+        // Numbers and Operations (6)
+        { text: "What is 348 + 276?", options: ["614", "624", "724", "514"], correct: 1, tema: "Addition" },
+        { text: "What is 7 × 8?", options: ["48", "56", "64", "72"], correct: 1, tema: "Multiplication" },
+        { text: "What is 150 ÷ 5?", options: ["25", "30", "35", "40"], correct: 1, tema: "Division" },
+        { text: "Which number is the greatest? 3.45, 3.54, 3.6, 3.48", options: ["3.45", "3.54", "3.6", "3.48"], correct: 2, tema: "Decimals" },
+        { text: "What is 1/2 + 1/4?", options: ["2/6", "3/4", "1/6", "2/4"], correct: 1, tema: "Fractions" },
+        { text: "What is the value of 10³?", options: ["100", "1000", "10000", "10"], correct: 1, tema: "Exponents" },
+        // Geometry (4)
+        { text: "How many sides does a hexagon have?", options: ["4", "5", "6", "8"], correct: 2, tema: "Shapes" },
+        { text: "What is the area of a rectangle with length 8 cm and width 5 cm?", options: ["13 cm²", "26 cm²", "40 cm²", "32 cm²"], correct: 2, tema: "Area" },
+        { text: "A triangle has angles of 60° and 60°. What is the third angle?", options: ["60°", "90°", "120°", "180°"], correct: 0, tema: "Angles" },
+        { text: "What is the perimeter of a square with side 6 cm?", options: ["12 cm", "24 cm", "36 cm", "16 cm"], correct: 1, tema: "Perimeter" },
+        // Measurement and Data (4)
+        { text: "How many centimeters are in 1 meter?", options: ["10", "100", "1000", "10000"], correct: 1, tema: "Measurement" },
+        { text: "What is 2:30 PM in 24-hour format?", options: ["12:30", "13:30", "14:30", "15:30"], correct: 2, tema: "Time" },
+        { text: "The temperature is 25°C. What is this in Fahrenheit? (Formula: °F = °C × 9/5 + 32)", options: ["75°F", "77°F", "80°F", "85°F"], correct: 1, tema: "Temperature" },
+        { text: "What is the mode of: 5, 8, 5, 7, 5, 9, 6?", options: ["5", "6", "7", "8"], correct: 0, tema: "Statistics" },
+        // Basic Algebra (3)
+        { text: "What is the missing number: 3 × ? = 21", options: ["5", "6", "7", "8"], correct: 2, tema: "Algebra" },
+        { text: "What is 4x + 2 = 14? Solve for x.", options: ["3", "4", "5", "6"], correct: 0, tema: "Algebra" },
+        { text: "What is 15 - (3 × 2) + 4?", options: ["10", "13", "16", "22"], correct: 1, tema: "Operations" },
+        // Word Problems (3)
+        { text: "Maria has 3 apples and buys 7 more. How many does she have now?", options: ["7", "9", "10", "11"], correct: 2, tema: "Word problems" },
+        { text: "A pizza is cut into 8 slices. You eat 3. What fraction is left?", options: ["3/8", "5/8", "5/16", "3/4"], correct: 1, tema: "Fractions" },
+        { text: "A train travels 120 km in 2 hours. What is its speed?", options: ["40 km/h", "50 km/h", "60 km/h", "70 km/h"], correct: 2, tema: "Speed" }
+    ];
+
+    const TOTAL_QUESTIONS = 20;
+    const TIME_LIMIT_MIN = 30;
+    
+    let currentQuestions = [];
+    let userAnswers = new Array(TOTAL_QUESTIONS).fill(null);
+    let timer;
+    let timeLeft = TIME_LIMIT_MIN * 60;
+    let examFinished = false;
+
+    function shuffleArray(arr) {
+        for (let i = arr.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        return arr;
+    }
+
+    function selectRandomQuestions() {
+        const shuffledBank = shuffleArray([...questionBank]);
+        return shuffledBank.slice(0, TOTAL_QUESTIONS);
+    }
+
+    function renderQuestions() {
+        const container = document.getElementById('questionsContainer');
+        container.innerHTML = '';
+        currentQuestions.forEach((q, idx) => {
+            const card = document.createElement('div');
+            card.className = 'question-card';
+            card.innerHTML = `
+                <div class="question-tag">📚 ${q.tema}</div>
+                <div class="question-text">${idx+1}. ${q.text}</div>
+                <ul class="options" data-qidx="${idx}">
+                    ${q.options.map((opt, optIdx) => `<li data-optidx="${optIdx}">${String.fromCharCode(65+optIdx)}. ${opt}</li>`).join('')}
+                </ul>
+            `;
+            container.appendChild(card);
+        });
+        document.querySelectorAll('.options').forEach(optContainer => {
+            const qIdx = parseInt(optContainer.dataset.qidx);
+            optContainer.querySelectorAll('li').forEach(li => {
+                const optIdx = parseInt(li.dataset.optidx);
+                li.addEventListener('click', () => {
+                    if (examFinished) return;
+                    optContainer.querySelectorAll('li').forEach(l => l.classList.remove('selected'));
+                    li.classList.add('selected');
+                    userAnswers[qIdx] = optIdx;
+                    updateCounterAndProgress();
+                });
+                if (userAnswers[qIdx] === optIdx) li.classList.add('selected');
+            });
+        });
+        updateCounterAndProgress();
+    }
+
+    function updateCounterAndProgress() {
+        const answered = userAnswers.filter(a => a !== null).length;
+        document.getElementById('counterDisplay').innerHTML = `📋 Answered: ${answered} of ${TOTAL_QUESTIONS}`;
+        const progressPercent = (answered / TOTAL_QUESTIONS) * 100;
+        document.getElementById('progressBar').style.width = `${progressPercent}%`;
+    }
+
+    function formatTime(seconds) {
+        const minutes = Math.floor(seconds / 60);
+        const secs = seconds % 60;
+        return `${minutes.toString().padStart(2,'0')}:${secs.toString().padStart(2,'0')}`;
+    }
+
+    function updateTimerDisplay() {
+        const timerElement = document.getElementById('timerDisplay');
+        timerElement.innerHTML = `⏱️ Time: ${formatTime(timeLeft)}`;
+        if (timeLeft <= 300 && timeLeft > 0) timerElement.classList.add('warning');
+        else timerElement.classList.remove('warning');
+        if (timeLeft <= 0 && !examFinished) {
+            clearInterval(timer);
+            examFinished = true;
+            alert("⏰ Time is up. Your exam will be graded automatically.");
+            gradeExam();
+        }
+    }
+
+    function startTimer() {
+        timer = setInterval(() => {
+            if (timeLeft > 0 && !examFinished) {
+                timeLeft--;
+                updateTimerDisplay();
+            } else if (timeLeft <= 0 && !examFinished) {
+                clearInterval(timer);
+                examFinished = true;
+                gradeExam();
+            }
+        }, 1000);
+    }
+
+    function obtenerTemaMasDebil(temas) {
+        let peorTema = null;
+        let peorPct = 100;
+        for (const [tema, data] of Object.entries(temas)) {
+            const pct = data.total > 0 ? (data.correctos / data.total) * 100 : 100;
+            if (pct < peorPct && data.total > 0) {
+                peorPct = pct;
+                peorTema = tema;
+            }
+        }
+        return peorTema;
+    }
+
+    function gradeExam() {
+        if (examFinished) return;
+        examFinished = true;
+        clearInterval(timer);
+        
+        let correctCount = 0;
+        const temas = {};
+        currentQuestions.forEach((q, idx) => {
+            if (!temas[q.tema]) temas[q.tema] = { total: 0, correctos: 0 };
+            temas[q.tema].total++;
+            if (userAnswers[idx] !== null && userAnswers[idx] === q.correct) {
+                correctCount++;
+                temas[q.tema].correctos++;
+            }
+        });
+        
+        const percentage = (correctCount / TOTAL_QUESTIONS) * 100;
+        const resultDiv = document.getElementById('results');
+        
+        let verdict = percentage >= 70 ? '🎉 ¡Excellent! Strong knowledge.' : 
+                     (percentage >= 50 ? '📚 Good, but needs to review some topics.' : 
+                     '⚠️ Needs to review basic concepts.');
+        
+        let temasHTML = '<div style="margin-top: 15px; text-align: left;"><h4>📊 Performance by topic:</h4><ul style="list-style: none;">';
+        for (const [tema, data] of Object.entries(temas)) {
+            const pct = Math.round((data.correctos / data.total) * 100);
+            temasHTML += `<li><strong>${tema}:</strong> ${data.correctos}/${data.total} (${pct}%)</li>`;
+        }
+        temasHTML += '</ul></div>';
+        
+        const peorTema = obtenerTemaMasDebil(temas);
+        let recomendacionHTML = '';
+        if (peorTema && (temas[peorTema].correctos / temas[peorTema].total) < 0.6) {
+            recomendacionHTML = `<div style="margin-top: 15px; background: #fff3e0; padding: 15px; border-radius: 10px; border-left: 4px solid #e25e00;">
+                <strong>💡 Recommendation:</strong> Focus on <strong>${peorTema}</strong>. 
+                Review the basics of this topic before starting 6th grade.
+            </div>`;
+        }
+        
+        let feedbackHTML = '<div style="margin-top: 20px; text-align: left;"><h4>📝 Answer review:</h4><div class="feedback-container">';
+        currentQuestions.forEach((q, idx) => {
+            const userAns = userAnswers[idx];
+            const isCorrect = userAns !== null && userAns === q.correct;
+            const correctText = q.options[q.correct];
+            const userText = userAns !== null ? q.options[userAns] : 'Not answered';
+            let clase = 'feedback-no-respondida';
+            if (isCorrect) clase = 'feedback-correcto';
+            else if (userAns !== null) clase = 'feedback-incorrecto';
+            feedbackHTML += `
+                <div class="feedback-item ${clase}">
+                    <strong>${idx+1}. ${q.text}</strong><br>
+                    ${isCorrect ? '✅ Correct' : (userAns !== null ? '❌ Incorrect' : '⬜ Not answered')}<br>
+                    <span style="color: #2e7d32;">✓ Correct answer: ${correctText}</span><br>
+                    ${!isCorrect ? `<span style="color: #c62828;">✗ Your answer: ${userText}</span><br>` : ''}
+                </div>
+            `;
+        });
+        feedbackHTML += '</div></div>';
+        
+        resultDiv.innerHTML = `
+            <div class="score">${correctCount} / ${TOTAL_QUESTIONS}</div>
+            <p style="font-size:1.2rem; margin:10px 0">Score: ${percentage.toFixed(1)}%</p>
+            <p style="font-weight:bold; color:#d32f2f">${verdict}</p>
+            ${temasHTML}
+            ${recomendacionHTML}
+            ${feedbackHTML}
+            <p style="margin-top:15px; font-size:0.9rem;">✨ You can retake this diagnostic test to practice ✨</p>
+            <button class="restart-btn" id="restartBtn">🔄 Retake test</button>
+        `;
+        resultDiv.classList.add('show');
+        document.getElementById('submitBtn').disabled = true;
+        document.getElementById('submitBtn').style.opacity = '0.6';
+        document.getElementById('restartBtn').addEventListener('click', () => location.reload());
+    }
+
+    function initExam() {
+        currentQuestions = selectRandomQuestions();
+        userAnswers = new Array(TOTAL_QUESTIONS).fill(null);
+        renderQuestions();
+        startTimer();
+    }
+
+    document.getElementById('submitBtn').addEventListener('click', () => { if (!examFinished && confirm("Are you sure you want to finish the test?")) gradeExam(); });
+    
+    initExam();
+</script>
+</body>
+</html>
