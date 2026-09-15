@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador EXCOBA | Aritmética y Álgebra | KUNA Academia</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Poppins', sans-serif; background-color: #f4f6f9; color: #333; line-height: 1.6; }
+        h1, h2, h3, h4 { font-family: 'Montserrat', sans-serif; font-weight: 700; }
+        .container { max-width: 1000px; margin: 0 auto; padding: 0 20px; }
+
+        header { background-color: #182a47; padding: 15px 0; position: sticky; top: 0; z-index: 100; }
+        header .container { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; }
+        .logo { display: flex; align-items: center; gap: 10px; }
+        .logo img { height: 50px; width: auto; }
+        .logo h1 { font-size: 1.5rem; color: #ffffff; }
+        .logo h1 span { font-weight: 300; font-size: 1.2rem; }
+        .timer-box { background-color: #e25e00; color: #fff; padding: 8px 20px; border-radius: 30px; font-weight: 700; font-size: 1.2rem; }
+
+        .hero { background: linear-gradient(135deg, #182a47 0%, #1e3c72 100%); color: #fff; padding: 40px 0; text-align: center; }
+        .hero h2 { font-size: 2rem; margin-bottom: 10px; }
+        .hero p { font-size: 1rem; opacity: 0.9; }
+
+        .main { padding: 40px 0; }
+        .question-card { background: #fff; border-radius: 12px; padding: 25px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border-left: 5px solid #e25e00; }
+        .question-number { font-weight: 700; color: #182a47; font-size: 1.1rem; margin-bottom: 10px; }
+        .question-text { font-size: 1rem; margin-bottom: 15px; color: #333; }
+        .answer-input { width: 100%; padding: 12px 15px; border: 2px solid #ddd; border-radius: 8px; font-family: 'Poppins', sans-serif; font-size: 1rem; transition: border 0.3s; }
+        .answer-input:focus { outline: none; border-color: #e25e00; }
+
+        .btn-container { text-align: center; margin: 40px 0; }
+        .btn-primary { background-color: #e25e00; color: #fff; padding: 15px 40px; border: none; border-radius: 40px; font-family: 'Poppins', sans-serif; font-size: 1.1rem; font-weight: 600; cursor: pointer; transition: all 0.3s; }
+        .btn-primary:hover { background-color: #2f5f4a; transform: translateY(-2px); }
+        .btn-primary:disabled { background-color: #ccc; cursor: not-allowed; transform: none; }
+
+        .results { display: none; background: #fff; border-radius: 12px; padding: 30px; margin-top: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        .results h3 { color: #182a47; margin-bottom: 20px; font-size: 1.5rem; }
+        .score-box { background: #e8f5e9; border-left: 5px solid #2f5f4a; padding: 20px; border-radius: 8px; margin-bottom: 25px; }
+        .score-box p { font-size: 1.1rem; margin-bottom: 5px; }
+        .score-box .score { font-size: 2rem; font-weight: 700; color: #2f5f4a; }
+        .review-item { border-bottom: 1px solid #eee; padding: 15px 0; }
+        .review-item:last-child { border-bottom: none; }
+        .review-question { font-weight: 600; color: #182a47; margin-bottom: 8px; }
+        .review-answer { font-size: 0.95rem; }
+        .correct { color: #2f5f4a; font-weight: 600; }
+        .incorrect { color: #c0392b; font-weight: 600; }
+
+        footer { background-color: #0f1f33; color: #8899aa; text-align: center; padding: 30px 0; font-size: 0.9rem; margin-top: 40px; }
+
+        @media (max-width: 768px) {
+            header .container { flex-direction: column; gap: 15px; }
+            .hero h2 { font-size: 1.5rem; }
+            .question-card { padding: 18px; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="container">
+        <div class="logo">
+            <img src="logo.png" alt="KUNA Academia">
+            <h1>KUNA<span>Academia</span></h1>
+        </div>
+        <div class="timer-box" id="timer">30:00</div>
+    </div>
+</header>
+
+<section class="hero">
+    <div class="container">
+        <h2>Simulador EXCOBA - Matemáticas</h2>
+        <p>Bloque 1: Aritmética y Álgebra | 30 preguntas | 30 minutos</p>
+    </div>
+</section>
+
+<div class="container main">
+    <form id="examForm">
+        <div id="questionsContainer"></div>
+        <div class="btn-container">
+            <button type="button" class="btn-primary" id="submitBtn" onclick="submitExam()">Terminar y ver resultados</button>
+        </div>
+    </form>
+
+    <div class="results" id="results">
+        <h3>Resultados del Simulador</h3>
+        <div class="score-box">
+            <p>Aciertos:</p>
+            <p class="score" id="scoreText">0 / 30</p>
+            <p id="timeUsed"></p>
+        </div>
+        <h4 style="margin-bottom: 15px; color: #182a47;">Revisión de respuestas:</h4>
+        <div id="reviewContainer"></div>
+    </div>
+</div>
+
+<footer>
+    <div class="container">
+        <p>&copy; 2026 KUNA Academia - Simulador EXCOBA</p>
+        <p><small>Basado en el formato oficial del examen de competencias básicas.</small></p>
+    </div>
+</footer>
+
+<script>
+    // Banco de 30 preguntas tipo EXCOBA (Aritmética y Álgebra)
+    const questions = [
+        { q: "Si en un sistema binario el número 7 se escribe como 111 (porque 4+2+1=7), ¿cómo se escribe 12?", a: "1100" },
+        { q: "Indica en cuál de las siguientes expresiones se cumple la igualdad: 5 / 0.2 = ?", a: "25" },
+        { q: "Si la raíz cúbica de x es igual a 3, ¿cuánto vale x?", a: "27" },
+        { q: "Al despejar el valor de x en la ecuación 9 = ax + bx, obtenemos x = ?", a: "9/(a+b)" },
+        { q: "Si en la ecuación (3a + 2b) * 5 = y, y los valores a=3 y b=0, ¿cuál es el valor de y?", a: "45" },
+        { q: "Simplificando la ecuación -4x + 3a = -10x + 6x + 3b, obtenemos:", a: "a=b" },
+        { q: "Al despejar la ecuación z + 8 = w, obtenemos z = w - 8. En el procedimiento tuvimos que:", a: "restar 8 en ambos lados" },
+        { q: "Resuelve: 12 + 5 * (8 - 3) = ?", a: "37" },
+        { q: "Resuelve: (15 - 6) * 2 + 8 / 4 = ?", a: "20" },
+        { q: "Calcula el 25% de 640.", a: "160" },
+        { q: "Si 3 camisas cuestan $540, ¿cuánto costarán 5 camisas?", a: "900" },
+        { q: "Resuelve: 2/3 * 9/4 - 1/2 = ?", a: "1" },
+        { q: "Resuelve: 5/6 / 2/3 + 1/4 = ?", a: "3/2" },
+        { q: "Resuelve: 3/4 * 8/9 - 1/3 = ?", a: "1/3" },
+        { q: "Encuentra el MCD de 24 y 36.", a: "12" },
+        { q: "Encuentra el MCM de 8 y 12.", a: "24" },
+        { q: "Resuelve: 3^4 = ?", a: "81" },
+        { q: "Resuelve: √144 = ?", a: "12" },
+        { q: "Resuelve: √81 + 2^3 = ?", a: "17" },
+        { q: "Si un televisor cuesta $15,000 y tiene un descuento del 25%, ¿cuál es el precio final?", a: "11250" },
+        { q: "Una computadora cuesta $12,000 y tiene un descuento del 35%. ¿Cuál es el precio final?", a: "7800" },
+        { q: "Si 4 obreros construyen un muro en 9 días, ¿cuántos días tardarán 6 obreros?", a: "6" },
+        { q: "Una impresora imprime 180 páginas en 9 minutos. ¿Cuántas páginas imprime en 15 minutos?", a: "300" },
+        { q: "Resuelve: 5x + 3 = 28. ¿Cuánto vale x?", a: "5" },
+        { q: "Resuelve: 4x - 9 = 15. ¿Cuánto vale x?", a: "6" },
+        { q: "Resuelve: 7x + 5 = 40. ¿Cuánto vale x?", a: "5" },
+        { q: "Resuelve: 3x - 8 = 25. ¿Cuánto vale x?", a: "11" },
+        { q: "Luis gana $15,000 al mes. Gasta $4,000 en renta, $3,000 en comida, $2,000 en servicios y el resto lo ahorra. ¿Cuánto ahorra?", a: "6000" },
+        { q: "En un grupo de 40 alumnos, 12 son mujeres. ¿Qué porcentaje del grupo son mujeres?", a: "30" },
+        { q: "Si un número más su triple es igual a 48, ¿cuál es el número?", a: "12" }
+    ];
+
+    let timeLeft = 30 * 60; // 30 minutos en segundos
+    let timerInterval;
+    let examFinished = false;
+
+    // Renderizar preguntas
+    const container = document.getElementById('questionsContainer');
+    questions.forEach((item, index) => {
+        const card = document.createElement('div');
+        card.className = 'question-card';
+        card.innerHTML = `
+            <div class="question-number">Pregunta ${index + 1}</div>
+            <div class="question-text">${item.q}</div>
+            <input type="text" class="answer-input" id="ans-${index}" placeholder="Escribe tu respuesta aquí" autocomplete="off">
+        `;
+        container.appendChild(card);
+    });
+
+    // Iniciar temporizador
+    function startTimer() {
+        timerInterval = setInterval(() => {
+            if (timeLeft <= 0) {
+                clearInterval(timerInterval);
+                if (!examFinished) {
+                    alert("¡Tiempo agotado! Se enviarán tus respuestas automáticamente.");
+                    submitExam();
+                }
+                return;
+            }
+            timeLeft--;
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            document.getElementById('timer').textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }, 1000);
+    }
+
+    // Enviar examen
+    function submitExam() {
+        if (examFinished) return;
+        examFinished = true;
+        clearInterval(timerInterval);
+        document.getElementById('submitBtn').disabled = true;
+
+        let correctCount = 0;
+        const reviewContainer = document.getElementById('reviewContainer');
+        reviewContainer.innerHTML = '';
+
+        questions.forEach((item, index) => {
+            const userAnswer = document.getElementById(`ans-${index}`).value.trim();
+            // Normalizar respuestas: quitar espacios, convertir a minúsculas para comparación básica
+            const normalizedUser = userAnswer.toLowerCase().replace(/\s+/g, '');
+            const normalizedCorrect = item.a.toLowerCase().replace(/\s+/g, '');
+            
+            const isCorrect = normalizedUser === normalizedCorrect;
+            if (isCorrect) correctCount++;
+
+            const reviewDiv = document.createElement('div');
+            reviewDiv.className = 'review-item';
+            reviewDiv.innerHTML = `
+                <div class="review-question">${index + 1}. ${item.q}</div>
+                <div class="review-answer">
+                    Tu respuesta: <span class="${isCorrect ? 'correct' : 'incorrect'}">${userAnswer || '(sin respuesta)'}</span> | 
+                    Correcta: <span class="correct">${item.a}</span>
+                </div>
+            `;
+            reviewContainer.appendChild(reviewDiv);
+        });
+
+        document.getElementById('scoreText').textContent = `${correctCount} / ${questions.length}`;
+        const minutesUsed = Math.floor((30 * 60 - timeLeft) / 60);
+        const secondsUsed = (30 * 60 - timeLeft) % 60;
+        document.getElementById('timeUsed').textContent = `Tiempo utilizado: ${minutesUsed} min ${secondsUsed} seg`;
+        
+        document.getElementById('results').style.display = 'block';
+        document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // Iniciar al cargar
+    window.onload = startTimer;
+</script>
+
+</body>
+</html>
