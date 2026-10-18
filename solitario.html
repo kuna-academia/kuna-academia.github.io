@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pensamiento Matemático I | Colegio Conin</title>
+    <style>
+        :root {
+            --azul-marino: #182a47;
+            --azul-medio: #2c5aa0;
+            --azul-claro: #e8eef7;
+            --azul-hover: #1e3c72;
+            --naranja: #e25e00;
+            --naranja-hover: #b84a00;
+            --blanco: #ffffff;
+            --gris-claro: #f4f6f9;
+            --gris-texto: #333333;
+            --rojo: #c0392b;
+            --verde: #27ae60;
+            --amarillo: #f1c40f;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', 'Montserrat', Arial, sans-serif;
+            background: var(--gris-claro);
+            color: var(--gris-texto);
+            line-height: 1.6;
+        }
+
+        header {
+            background-color: var(--azul-marino);
+            padding: 12px 25px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        }
+
+        header img {
+            height: 50px;
+            width: auto;
+            display: block;
+            object-fit: contain;
+        }
+
+        .header-texto {
+            color: var(--blanco);
+            font-size: 1.2rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .titulo {
+            text-align: center;
+            margin: 15px 0;
+        }
+
+        .titulo h1 {
+            color: var(--azul-marino);
+            font-size: 1.6rem;
+            margin-bottom: 3px;
+        }
+
+        .titulo p {
+            color: var(--azul-medio);
+            font-size: 1rem;
+        }
+
+        .titulo .linea {
+            width: 60px;
+            height: 3px;
+            background: var(--naranja);
+            margin: 10px auto;
+            border-radius: 2px;
+        }
+
+        /* ============================================
+           PANEL DE INFORMACIÓN
+           ============================================ */
+        #info {
+            background: var(--blanco);
+            border-radius: 12px;
+            padding: 18px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            border-left: 5px solid var(--naranja);
+            margin-bottom: 15px;
+        }
+
+        #info .instrucciones {
+            color: var(--azul-marino);
+            font-size: 0.9rem;
+        }
+
+        #info .instrucciones p {
+            margin-bottom: 4px;
+        }
+
+        #mensaje {
+            font-size: 0.95rem;
+            margin-top: 10px;
+            font-weight: 600;
+            text-align: center;
+            min-height: 22px;
+        }
+
+        /* ============================================
+           NÚMEROS A FACTORIZAR
+           ============================================ */
+        .numeros-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .numero-card {
+            background: var(--blanco);
+            border: 3px solid var(--azul-medio);
+            border-radius: 16px;
+            padding: 20px 15px;
+            text-align: center;
+            width: 140px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .numero-card:hover:not(.factorizado) {
+            border-color: var(--naranja);
+            transform: translateY(-3px);
+        }
+
+        .numero-card .numero {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: var(--azul-marino);
+            line-height: 1;
+        }
+
+        .numero-card .estado {
+            font-size: 0.8rem;
+            color: var(--gris-texto);
+            margin-top: 5px;
+        }
+
+        .numero-card.factorizado {
+            background: #e8f5e9;
+            border-color: var(--verde);
+            cursor: default;
+            opacity: 0.7;
+        }
+
+        .numero-card.factorizado .numero {
+            color: var(--verde);
+        }
+
+        .numero-card.error {
+            animation: shake 0.5s ease;
+            border-color: var(--rojo);
+        }
+
+        .numero-card.seleccionado {
+            border-color: var(--naranja);
+            border-width: 4px;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-8px); }
+            75% { transform: translateX(8px); }
+        }
+
+        /* ============================================
+           BANCO DE FACTORES
+           ============================================ */
+        .banco-container {
+            background: var(--blanco);
+            border-radius: 12px;
+            padding: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            margin: 20px 0;
+        }
+
+        .banco-container h3 {
+            color: var(--azul-marino);
+            font-size: 1rem;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .factores-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .factor-btn {
+            background: var(--azul-medio);
+            color: var(--blanco);
+            border: none;
+            border-radius: 10px;
+            padding: 12px 18px;
+            font-size: 1.3rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+        }
+
+        .factor-btn:hover:not(:disabled) {
+            background: var(--azul-hover);
+            transform: translateY(-2px);
+        }
+
+        .factor-btn.seleccionado {
+            background: var(--naranja);
+            transform: scale(1.1);
+            box-shadow: 0 0 0 3px rgba(226, 94, 0, 0.4);
+        }
+
+        .factor-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        /* ============================================
+           PANEL DE VIDAS Y PROGRESO
+           ============================================ */
+        .panel-superior {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--blanco);
+            border-radius: 12px;
+            padding: 12px 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            margin-bottom: 15px;
+        }
+
+        .vidas {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--azul-marino);
+        }
+
+        .vidas .corazon {
+            color: var(--rojo);
+            font-size: 1.2rem;
+        }
+
+        .vidas .corazon.perdido {
+            opacity: 0.3;
+        }
+
+        .progreso-texto {
+            font-size: 0.9rem;
+            color: var(--azul-medio);
+            font-weight: 500;
+        }
+
+        /* ============================================
+           BOTONES
+           ============================================ */
+        .btn {
+            display: block;
+            margin: 15px auto;
+            padding: 12px 28px;
+            font-size: 0.95rem;
+            background: var(--naranja);
+            color: var(--blanco);
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            box-shadow: 0 4px 10px rgba(226, 94, 0, 0.3);
+        }
+
+        .btn:hover {
+            background: var(--naranja-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(226, 94, 0, 0.4);
+        }
+
+        .btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .btn-verde {
+            background: var(--verde);
+        }
+
+        .btn-verde:hover {
+            background: #1e8449;
+        }
+
+        /* ============================================
+           MODAL DE FACTORIZACIÓN
+           ============================================ */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            z-index: 999;
+            justify-content: center;
+            align-items: center;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .modal-overlay.activo {
+            display: flex;
+        }
+
+        .modal-contenido {
+            background: var(--blanco);
+            border-radius: 16px;
+            padding: 25px;
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+
+        .modal-contenido h2 {
+            color: var(--azul-marino);
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+        }
+
+        .modal-contenido p {
+            color: var(--gris-texto);
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+        }
+
+        .factorizacion-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            background: var(--azul-claro);
+            padding: 10px;
+            border-radius: 8px;
+        }
+
+        .factorizacion-item .num {
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: var(--azul-marino);
+            min-width: 50px;
+        }
+
+        .factorizacion-item .igual {
+            font-size: 1.2rem;
+            color: var(--gris-texto);
+        }
+
+        .factorizacion-item input {
+            font-size: 1.1rem;
+            padding: 8px 12px;
+            border: 2px solid var(--azul-medio);
+            border-radius: 8px;
+            width: 200px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .factorizacion-item input:focus {
+            outline: none;
+            border-color: var(--naranja);
+        }
+
+        .factorizacion-item input.correcto {
+            border-color: var(--verde);
+            background: #e8f5e9;
+        }
+
+        .factorizacion-item input.incorrecto {
+            border-color: var(--rojo);
+            background: #ffebee;
+        }
+
+        /* ============================================
+           RESULTADO
+           ============================================ */
+        #resultado {
+            display: none;
+            background: var(--blanco);
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            border-top: 5px solid var(--naranja);
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        #resultado h2 {
+            color: var(--azul-marino);
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+
+        #resultado .mensaje {
+            font-size: 1rem;
+            color: var(--azul-medio);
+            margin-bottom: 15px;
+        }
+
+        #resultado .detalle {
+            text-align: left;
+            background: var(--azul-claro);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            font-size: 0.95rem;
+        }
+
+        #resultado .detalle p {
+            margin-bottom: 5px;
+        }
+
+        footer {
+            background: var(--azul-marino);
+            color: var(--blanco);
+            text-align: center;
+            padding: 15px;
+            margin-top: 30px;
+            font-size: 0.8rem;
+            opacity: 0.9;
+        }
+
+        @media (max-width: 600px) {
+            header img { height: 40px; }
+            .header-texto { font-size: 1rem; }
+            .titulo h1 { font-size: 1.3rem; }
+            .numero-card { width: 110px; padding: 15px 10px; }
+            .numero-card .numero { font-size: 1.8rem; }
+            .factor-btn { padding: 10px 14px; font-size: 1.1rem; }
+            .factorizacion-item input { width: 150px; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <img src="logo.png" alt="Colegio Conin" onerror="this.style.display='none';">
+    <div class="header-texto">COLEGIO CONIN</div>
+</header>
+
+<div class="container">
+
+    <div class="titulo">
+        <h1>Pensamiento Matemático I</h1>
+        <p>Profesora Claudia Martínez Vilchis</p>
+        <div class="linea"></div>
+    </div>
+
+    <!-- ============================================
+         PANEL SUPERIOR
+         ============================================ -->
+    <div class="panel-superior">
+        <div class="vidas" id="vidas">
+            Vidas: <span class="corazon">❤️</span> <span class="corazon">❤️</span> <span class="corazon">❤️</span>
+        </div>
+        <div class="progreso-texto" id="progreso">
+            Números factorizados: 0 / 4
+        </div>
+    </div>
+
+    <!-- ============================================
+         NÚMEROS A FACTORIZAR
+         ============================================ -->
+    <div class="numeros-container" id="numeros-container"></div>
+
+    <!-- ============================================
+         BANCO DE FACTORES
+         ============================================ -->
+    <div class="banco-container">
+        <h3>🔢 Banco de factores primos</h3>
+        <div class="factores-grid" id="factores-grid"></div>
+    </div>
+
+    <!-- ============================================
+         MENSAJE
+         ============================================ -->
+    <div id="mensaje"></div>
+
+    <!-- ============================================
+         BOTÓN PARA VALIDAR
+         ============================================ -->
+    <button class="btn" id="btn-validar" onclick="abrirModalFactorizacion()" disabled>✍️ Escribir factorización</button>
+
+    <!-- ============================================
+         BOTÓN PARA REINICIAR
+         ============================================ -->
+    <button class="btn" style="background: var(--azul-medio);" onclick="reiniciarJuego()">🔄 Nuevo Juego</button>
+
+    <!-- ============================================
+         RESULTADO
+         ============================================ -->
+    <div id="resultado">
+        <h2>📚 Resultado</h2>
+        <div class="mensaje" id="mensaje-final"></div>
+        <div class="detalle" id="detalle"></div>
+    </div>
+
+</div>
+
+<!-- ============================================
+     MODAL DE FACTORIZACIÓN
+     ============================================ -->
+<div class="modal-overlay" id="modal-factorizacion">
+    <div class="modal-contenido">
+        <h2>✍️ Escribe la factorización</h2>
+        <p>Escribe cada número como producto de factores primos con exponentes. Ejemplo: 24 = 2^3 * 3</p>
+        <div id="factorizacion-lista"></div>
+        <button class="btn btn-verde" onclick="validarFactorizacion()">✅ Validar respuestas</button>
+    </div>
+</div>
+
+<footer>
+    <p>&copy; 2026 Colegio Conin | Pensamiento Matemático I</p>
+    <p>Profesora Claudia Martínez Vilchis</p>
+</footer>
+
+<script>
+    // ===== CONFIGURACIÓN =====
+    const NUM_MIN = 2;
+    const NUM_MAX = 100;
+    const CANTIDAD_NUMEROS = 4;
+    const VIDAS_INICIALES = 3;
+
+    let numeros = [];           // { valor, original, factorizado }
+    let factorSeleccionado = null;
+    let vidas = VIDAS_INICIALES;
+    let factorizados = 0;
+    let juegoTerminado = false;
+    let errores = [];
+
+    // ===== PRIMOS =====
+    function esPrimo(n) {
+        if (n < 2) return false;
+        for (let i = 2; i <= Math.sqrt(n); i++) {
+            if (n % i === 0) return false;
+        }
+        return true;
+    }
+
+    // ===== GENERAR NÚMEROS =====
+    function generarNumeros() {
+        let nums = [];
+        while (nums.length < CANTIDAD_NUMEROS) {
+            const num = Math.floor(Math.random() * (NUM_MAX - NUM_MIN + 1)) + NUM_MIN;
+            // Evitar números primos (no se pueden factorizar más allá de 1)
+            if (!esPrimo(num) && !nums.includes(num)) {
+                nums.push(num);
+            }
+        }
+        return nums;
+    }
+
+    // ===== FACTORIZACIÓN PRIMA =====
+    function factorizar(n) {
+        let factores = {};
+        let temp = n;
+        for (let p = 2; p <= temp; p++) {
+            while (temp % p === 0 && esPrimo(p)) {
+                factores[p] = (factores[p] || 0) + 1;
+                temp /= p;
+            }
+        }
+        return factores;
+    }
+
+    // ===== FORMATEAR FACTORIZACIÓN =====
+    function formatearFactorizacion(factores) {
+        let partes = [];
+        for (let p in factores) {
+            if (factores[p] === 1) {
+                partes.push(p);
+            } else {
+                partes.push(`${p}^${factores[p]}`);
+            }
+        }
+        return partes.join(' * ');
+    }
+
+    // ===== GENERAR BANCO DE FACTORES =====
+    function generarBancoFactores() {
+        let banco = [];
+        
+        // Agregar los factores necesarios para cada número
+        numeros.forEach(n => {
+            let factores = factorizar(n.original);
+            for (let p in factores) {
+                for (let i = 0; i < factores[p]; i++) {
+                    banco.push(parseInt(p));
+                }
+            }
+        });
+
+        // Agregar algunos distractores
+        const primosDistractores = [2, 3, 5, 7, 11, 13, 17, 19];
+        for (let i = 0; i < 6; i++) {
+            const p = primosDistractores[Math.floor(Math.random() * primosDistractores.length)];
+            banco.push(p);
+        }
+
+        // Mezclar
+        for (let i = banco.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [banco[i], banco[j]] = [banco[j], banco[i]];
+        }
+
+        return banco;
+    }
+
+    let bancoFactores = [];
+
+    // ===== INICIAR JUEGO =====
+    function inicializarJuego() {
+        const numsOriginales = generarNumeros();
+        numeros = numsOriginales.map(n => ({
+            valor: n,
+            original: n,
+            factorizado: false
+        }));
+        factorSeleccionado = null;
+        vidas = VIDAS_INICIALES;
+        factorizados = 0;
+        juegoTerminado = false;
+        errores = [];
+
+        bancoFactores = generarBancoFactores();
+
+        document.getElementById('mensaje').textContent = '';
+        document.getElementById('mensaje').style.color = '';
+        document.getElementById('btn-validar').disabled = true;
+        document.getElementById('resultado').style.display = 'none';
+
+        renderizarNumeros();
+        renderizarFactores();
+        actualizarPanel();
+    }
+
+    // ===== RENDERIZAR NÚMEROS =====
+    function renderizarNumeros() {
+        let html = '';
+        numeros.forEach((n, i) => {
+            const clase = n.factorizado ? 'factorizado' : '';
+            const estado = n.factorizado ? '✅ Factorizado' : 'Haz clic para dividir';
+            html += `
+                <div class="numero-card ${clase}" id="num-card-${i}" onclick="seleccionarNumero(${i})">
+                    <div class="numero">${n.valor}</div>
+                    <div class="estado">${estado}</div>
+                </div>
+            `;
+        });
+        document.getElementById('numeros-container').innerHTML = html;
+    }
+
+    // ===== RENDERIZAR FACTORES =====
+    function renderizarFactores() {
+        let html = '';
+        bancoFactores.forEach((f, i) => {
+            const sel = (factorSeleccionado === i) ? 'seleccionado' : '';
+            html += `
+                <button class="factor-btn ${sel}" id="factor-${i}" onclick="seleccionarFactor(${i})">${f}</button>
+            `;
+        });
+        document.getElementById('factores-grid').innerHTML = html;
+    }
+
+    // ===== SELECCIONAR FACTOR =====
+    function seleccionarFactor(indice) {
+        if (juegoTerminado) return;
+        if (bancoFactores[indice] === null) return;
+
+        // Si ya está seleccionado, deseleccionar
+        if (factorSeleccionado === indice) {
+            factorSeleccionado = null;
+        } else {
+            factorSeleccionado = indice;
+        }
+        renderizarFactores();
+
+        if (factorSeleccionado !== null) {
+            document.getElementById('mensaje').textContent = `Factor seleccionado: ${bancoFactores[factorSeleccionado]}. Ahora elige un número para dividirlo.`;
+            document.getElementById('mensaje').style.color = '#e25e00';
+        }
+    }
+
+    // ===== SELECCIONAR NÚMERO =====
+    function seleccionarNumero(indice) {
+        if (juegoTerminado) return;
+        if (numeros[indice].factorizado) return;
+
+        if (factorSeleccionado === null) {
+            document.getElementById('mensaje').textContent = 'Primero selecciona un factor primo del banco.';
+            document.getElementById('mensaje').style.color = '#c0392b';
+            return;
+        }
+
+        const num = numeros[indice];
+        const factor = bancoFactores[factorSeleccionado];
+
+        // Verificar si el factor divide exactamente
+        if (num.valor % factor === 0) {
+            // Correcto
+            num.valor = num.valor / factor;
+            bancoFactores[factorSeleccionado] = null; // Consumir factor
+            factorSeleccionado = null;
+
+            document.getElementById('mensaje').textContent = `✅ ¡Correcto! ${num.original} ÷ ${factor} = ${num.valor}`;
+            document.getElementById('mensaje').style.color = '#27ae60';
+
+            // Verificar si llegó a 1
+            if (num.valor === 1) {
+                num.factorizado = true;
+                factorizados++;
+                document.getElementById('mensaje').textContent = `🎉 ¡${num.original} factorizado completamente!`;
+            }
+
+            renderizarNumeros();
+            renderizarFactores();
+            actualizarPanel();
+            verificarFinJuego();
+        } else {
+            // Incorrecto
+            vidas--;
+            errores.push({ num: num.original, factor: factor });
+            factorSeleccionado = null;
+
+            document.getElementById('mensaje').textContent = `❌ ¡Error! ${factor} no divide exactamente a ${num.valor}.`;
+            document.getElementById('mensaje').style.color = '#c0392b';
+
+            const card = document.getElementById(`num-card-${indice}`);
+            if (card) {
+                card.classList.add('error');
+                setTimeout(() => card.classList.remove('error'), 500);
+            }
+
+            renderizarFactores();
+            actualizarPanel();
+            verificarFinJuego();
+        }
+    }
+
+    // ===== ACTUALIZAR PANEL =====
+    function actualizarPanel() {
+        // Vidas
+        let vidasHTML = 'Vidas: ';
+        for (let i = 0; i < VIDAS_INICIALES; i++) {
+            if (i < vidas) {
+                vidasHTML += '<span class="corazon">❤️</span> ';
+            } else {
+                vidasHTML += '<span class="corazon perdido">❤️</span> ';
+            }
+        }
+        document.getElementById('vidas').innerHTML = vidasHTML;
+
+        // Progreso
+        document.getElementById('progreso').textContent = `Números factorizados: ${factorizados} / ${CANTIDAD_NUMEROS}`;
+    }
+
+    // ===== VERIFICAR FIN DE JUEGO =====
+    function verificarFinJuego() {
+        if (vidas <= 0) {
+            juegoTerminado = true;
+            document.getElementById('mensaje').textContent = '💀 ¡Has perdido todas tus vidas!';
+            document.getElementById('mensaje').style.color = '#c0392b';
+            mostrarResultadoFinal(false);
+        } else if (factorizados === CANTIDAD_NUMEROS) {
+            // Todos factorizados: habilitar botón para escribir factorización
+            document.getElementById('btn-validar').disabled = false;
+            document.getElementById('mensaje').textContent = '🎉 ¡Todos los números factorizados! Ahora escribe la factorización.';
+            document.getElementById('mensaje').style.color = '#27ae60';
+        }
+    }
+
+    // ===== ABRIR MODAL DE FACTORIZACIÓN =====
+    function abrirModalFactorizacion() {
+        let html = '';
+        numeros.forEach(n => {
+            html += `
+                <div class="factorizacion-item">
+                    <span class="num">${n.original}</span>
+                    <span class="igual">=</span>
+                    <input type="text" id="fact-input-${n.original}" placeholder="Ej: 2^3 * 3">
+                </div>
+            `;
+        });
+        document.getElementById('factorizacion-lista').innerHTML = html;
+        document.getElementById('modal-factorizacion').classList.add('activo');
+    }
+
+    // ===== VALIDAR FACTORIZACIÓN =====
+    function validarFactorizacion() {
+        let todasCorrectas = true;
+        let detalle = '';
+
+        numeros.forEach(n => {
+            const input = document.getElementById(`fact-input-${n.original}`);
+            const respuesta = input.value.trim().replace(/\s+/g, '');
+            
+            const factores = factorizar(n.original);
+            const correcta = formatearFactorizacion(factores).replace(/\s+/g, '');
+            
+            if (respuesta === correcta) {
+                input.classList.add('correcto');
+                input.classList.remove('incorrecto');
+                detalle += `<p>✅ ${n.original} = ${correcta} (correcto)</p>`;
+            } else {
+                input.classList.add('incorrecto');
+                input.classList.remove('correcto');
+                detalle += `<p>❌ ${n.original} = ${correcta} (tu respuesta: ${respuesta || 'vacío'})</p>`;
+                todasCorrectas = false;
+            }
+        });
+
+        setTimeout(() => {
+            document.getElementById('modal-factorizacion').classList.remove('activo');
+            mostrarResultadoFinal(todasCorrectas, detalle);
+        }, 1000);
+    }
+
+    // ===== MOSTRAR RESULTADO FINAL =====
+    function mostrarResultadoFinal(ganaste, detalle = '') {
+        juegoTerminado = true;
+        const resultado = document.getElementById('resultado');
+        const mensajeFinal = document.getElementById('mensaje-final');
+        const detalleDiv = document.getElementById('detalle');
+
+        if (ganaste) {
+            mensajeFinal.textContent = `🎉 ¡Felicidades! Factorizaste todos los números correctamente. Vidas restantes: ${vidas}`;
+            mensajeFinal.style.color = '#27ae60';
+        } else {
+            mensajeFinal.textContent = `❌ No lograste factorizar todos los números. Vidas restantes: ${vidas}`;
+            mensajeFinal.style.color = '#c0392b';
+        }
+
+        if (detalle) {
+            detalleDiv.innerHTML = detalle;
+        } else {
+            let det = '';
+            numeros.forEach(n => {
+                const factores = factorizar(n.original);
+                det += `<p>${n.original} = ${formatearFactorizacion(factores)}</p>`;
+            });
+            detalleDiv.innerHTML = det;
+        }
+
+        resultado.style.display = 'block';
+        resultado.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // ===== REINICIAR JUEGO =====
+    function reiniciarJuego() {
+        inicializarJuego();
+    }
+
+    // ===== INICIAR =====
+    inicializarJuego();
+</script>
+</body>
+</html>
